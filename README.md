@@ -1,1 +1,1 @@
-# social-app
+# Social app with firebase
