@@ -1,0 +1,41 @@
+.left {
+//   border: 1px red solid;
+  flex: 0.2;
+  padding: 1rem;
+  ul {
+    // border: 1px red solid;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 3px 3px 5px rgb(207, 207, 207);
+    li {
+    //   border: 1px red solid;
+      display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        margin-bottom: 0.2rem;
+        cursor: pointer;
+        &:hover{
+            border-left: 3px solid #1877F2;
+            background-color: rgb(248, 248, 248);
+            h4{
+                color: #1877F2;
+            }
+            svg{
+                fill: #1877F2;
+                color: #1877F2;
+            }
+        }
+        svg{
+            font-size: 1.8rem;
+            fill: gray;
+            color: gray;
+        }
+        h4{
+            font-size: 1rem;
+            margin-left: 1rem;
+            color: rgb(68, 68, 68);
+        }
+    }
+  }
+}

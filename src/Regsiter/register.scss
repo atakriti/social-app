@@ -1,18 +1,37 @@
+
 .register{
     height: 100vh;
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
+    .madeBy{
+        margin-top: 3rem;
+        font-size: 1rem;
+        font-family: 'Dancing Script', cursive;
+        cursor: pointer;
+        color: black ;
+        font-weight: bold;
+        text-decoration: none;
+        transition: 0.5s;
+        &:hover{
+            transition: 0.5s;
+            color: #1877F2;
+        }
+        
+    }
     .register-container{
         width: min(100% - 3%,1500px);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: rgb(206, 206, 206);
+        // background-color: rgb(206, 206, 206);
+        background-color: black;
         padding: 1rem;
         border: 1px gray solid;
         border-radius: 10px;
         gap: 1rem;
+        color: white; // Color for all texts
         .left{
             // flex: 1 1 350px;
             width:min(100%,40rem);
@@ -36,6 +55,12 @@
                 width: min(100% - 3%,200px);
                 padding: 0.5rem 0;
                 border-radius: 10px;
+                transition: 0.5s;
+                &:hover{
+                    transition: 0.5s;
+                background-color: #0a4faa;
+
+                }
             }
             h5{
                 text-decoration: underline;

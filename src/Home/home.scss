@@ -1,0 +1,13 @@
+.home{
+    background-color: rgb(245, 245, 245);
+    box-shadow: 3px 3px 5px rgb(207, 207, 207);
+
+    width: min(100% - 1%,1700px);
+    margin: 0 auto;
+    padding: 1rem;
+    .home-container{
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+}
