@@ -1,4 +1,108 @@
-.mid{
-    flex: 0.6;
-    border: 1px red solid;
+.mid {
+  flex: 0.6;
+  border: 1px red solid;
+  padding: 1rem;
+  .mid-stories {
+    display: flex;
+    overflow-x: scroll;
+    width: 50vw;
+    gap: 2rem;
+    padding-bottom: 1rem;
+    &::-webkit-scrollbar {
+      height: 0.3vw;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: lightgray;
+    }
+    span {
+      border: 1px lightgray solid;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      min-width: 10rem;
+      min-height: 14rem;
+      padding: 0.5rem;
+      background: linear-gradient(to bottom, white, lightgray);
+      box-shadow: 3px 3px 5px lightgray;
+      cursor: pointer;
+      svg {
+        font-size: 1.5rem;
+      }
+      h4 {
+        font-size: 1rem;
+        margin-top: 1rem;
+      }
+    }
+    .singleStory {
+      border: 1px lightgray solid;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 10rem;
+      min-height: 14rem;
+      padding: 0.5rem;
+      box-shadow: 3px 3px 5px lightgray;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+      cursor: pointer;
+      video{
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.7);
+      }
+      .photoURL {
+        display: flex;
+        width: 3rem;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          clip-path: circle(30%);
+        }
+      }
+      h3 {
+        font-size: 0.9rem;
+        text-align: center;
+        color: white;
+      }
+    }
+
+    .viewStory{
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.644);
+        padding: 2rem;
+        z-index: 3;
+        video{
+            width: 100%;
+            height: 100%;
+        }
+        h6{
+            font-size: 1.5rem;
+            color: white;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+
+        }
+    }
+  }
 }

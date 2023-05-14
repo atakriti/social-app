@@ -30,7 +30,7 @@ function Register() {
     <div className='register'>
         <div className="register-container">
           {switchForms === 1 && (
-             <form data-aos="flip-left" className="left" onChange={(e) => setSiValue({...siValue,[e.target.name]:e.target.value})} onSubmit={handleSubmitSignin}>
+             <form data-aos="flip-left" className="re-left" onChange={(e) => setSiValue({...siValue,[e.target.name]:e.target.value})} onSubmit={handleSubmitSignin}>
              <h1>Sign in</h1>
              <input type="email" name="siEmail" placeholder='Enter your E-Mail...' value={siValue.siEmail} />
              <input type="password" name="siPassword" placeholder='Enter your Password...' value={siValue.siPassword} />
@@ -39,7 +39,7 @@ function Register() {
          </form>
           )}
           {switchForms === 2 && (
-             <form data-aos="flip-right" className="left" onChange={(e) => setSuValue({...suValue,[e.target.name]:e.target.value})} onSubmit={handleSubmitSignup}>
+             <form data-aos="flip-right" className="re-left" onChange={(e) => setSuValue({...suValue,[e.target.name]:e.target.value})} onSubmit={handleSubmitSignup}>
                 <h1>Sign up</h1>
                 <input type="text" name="displayName" placeholder='Enter you Name...' value={suValue.displayName} />
                 <input type="email" name="suEmail" placeholder='Enter your E-Mail...' value={suValue.suEmail} />
@@ -49,7 +49,7 @@ function Register() {
             </form>
           )}
            
-            <div className="right">
+            <div className="re-right">
                 <a ><img src={image} alt="" /></a>
             </div>
         </div>
