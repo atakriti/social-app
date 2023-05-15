@@ -26,12 +26,21 @@ header {
   .header-right{
     display: flex;
     align-items: center;
+    cursor: pointer;
     h3{
         margin-left: 1rem;
         font-size: 0.9rem;
     }
     svg{
         font-size: 1.5rem;
+    }
+    &:hover{
+      h3{
+        color: #1877F2;
+      }
+      svg{
+        color: #1877F2;
+      }
     }
   }
 
