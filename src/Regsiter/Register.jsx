@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./register.scss";
 import { FcGoogle } from "react-icons/fc";
@@ -9,7 +9,10 @@ import "aos/dist/aos.css";
 import { auth, googleProvider,db } from "../firebase"
 import {addDoc,collection} from "firebase/firestore"
 import {createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,signInWithPopup,updateProfile,onAuthStateChanged} from "firebase/auth"
+import { context } from "../ContextFun";
 function Register() {
+  const {users} = useContext(context)
+  let userCollection = collection(db,"users")
   const navigate = useNavigate();
   const [switchForms, setSwitchForms] = useState(1);
   const [siValue, setSiValue] = useState({
@@ -21,16 +24,61 @@ function Register() {
     suEmail: "",
     suPassword: "",
   });
-  const handleSubmitSignin = (e) => {
+  const handleSubmitSignin = async (e) => {
     e.preventDefault();
-    navigate("/home");
+    try {
+      await signInWithEmailAndPassword(auth,siValue.siEmail,siValue.siPassword).then(() => navigate("/home"))
+      setSiValue({
+        siEmail: "",
+        siPassword: "",
+      })
+      
+    } catch (error) {
+      alert(error.message.split("/")[1].replace(")", ""))
+    }
   };
-  const handleSubmitSignup = (e) => {
+  const handleSubmitSignup = async (e) => {
     e.preventDefault();
+    try {
+      const {user} = await createUserWithEmailAndPassword(auth,suValue.suEmail,suValue.suPassword)
+      await updateProfile(user,{displayName:suValue.displayName})
+      await addDoc(userCollection,{
+        email:suValue.suEmail,
+        displayName:suValue.displayName,
+        friends:[],
+        chat:[],
+        posts:[]
+      }).then(() => navigate("/home") )
+      setSuValue({
+        displayName: "",
+        suEmail: "",
+        suPassword: "",
+      })
+        
+    } catch (error) {
+      alert(error.message.split("/")[1].replace(")", ""))
+    }
   };
   // ======================
   const handleGoogle = async () => {
-      await signInWithPopup(auth,googleProvider)
+    try {
+      const {user} = await signInWithPopup(auth,googleProvider)
+      if(users?.some(item => item?.email === user?.email)){
+        navigate("/home")
+      }else{
+        await addDoc(userCollection,{
+          email:user.email,
+          displayName:user.displayName,
+          friends:[],
+          chat:[],
+          posts:[]
+        }).then(() => navigate("/home") )
+        
+        
+      }
+    } catch (error) {
+      alert(error.message.split("/")[1].replace(")", ""))
+    }
   }
   // ========================= UserEffect ===============
   useEffect(() => {
