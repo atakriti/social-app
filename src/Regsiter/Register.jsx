@@ -47,7 +47,8 @@ function Register() {
         displayName:suValue.displayName,
         friends:[],
         chat:[],
-        posts:[]
+        posts:[],
+        stories:[]
       }).then(() => navigate("/home") )
       setSuValue({
         displayName: "",
@@ -71,7 +72,8 @@ function Register() {
           displayName:user.displayName,
           friends:[],
           chat:[],
-          posts:[]
+          posts:[],
+          stories:[]
         }).then(() => navigate("/home") )
         
         

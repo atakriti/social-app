@@ -6,7 +6,9 @@ import {MdPermMedia} from "react-icons/md"
 import {CgProfile} from "react-icons/cg"
 import {AiFillSetting} from "react-icons/ai"
 import "./left.scss"
+import { useNavigate } from 'react-router-dom'
 function Left() {
+    const navigate = useNavigate()
     const lists = [
         {
             title:"home",
@@ -37,7 +39,7 @@ function Left() {
     <div className='left'>
         <ul>
             {lists.map((item,i) => (
-                <li key={i}><item.logo/> <h4>{item.title[0].toUpperCase() + item.title.slice(1)}</h4></li>
+                <li onClick={() => navigate(`/${item?.title}`)} key={i}><item.logo/> <h4>{item.title[0].toUpperCase() + item.title.slice(1)}</h4></li>
             ))}
         </ul>
     </div>

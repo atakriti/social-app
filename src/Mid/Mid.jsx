@@ -5,10 +5,12 @@ import videoLion from "../images/video-lion.mp4";
 import woman from "../images/woman.mp4";
 import logo from "../images/anwar-logo.jpg";
 import "./mid.scss";
+import CameraComponent from "../Camera/Camera";
 function Mid() {
   //! Must display video or image
   let [viewStory, setViewStory] = useState(false);
   let [selectedStory,setSelectedStory] = useState()
+  const [isStory,setIsStory] = useState(false)
   let stories = [
     {
       displayName: "anwar",
@@ -51,13 +53,16 @@ function Mid() {
     setViewStory(true)
   } 
 
+
+
   return (
     <div className="mid">
       <div className="mid-stories">
-        <span>
+        <span onClick={() => setIsStory(true)}>
           <BsPlusCircle />
           <h4>Add Story</h4>
         </span>
+        {isStory && <CameraComponent/>}
         {/* Here must be replaced with the friends stories */}
         {stories.map((item, i) => (
           <div onClick={()=>handleClickStory(item)} key={i} className="singleStory">
