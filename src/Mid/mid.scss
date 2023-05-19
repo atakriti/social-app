@@ -5,6 +5,35 @@
   background-color: white;
   border-radius: 10px;
   box-shadow: 3px 3px 5px rgb(207, 207, 207);
+
+  // =================== Camera  =======================
+  .camera-component{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(
+      to top,
+      rgb(0, 0, 0) 10%,
+      rgba(0, 0, 0, 0.295) 60%,
+      rgb(0, 0, 0) 100%
+    );
+   
+  }
+
+  // ===================== Camera ends ====================
+
+
+
+
+
+
+
   .mid-stories {
     display: flex;
     overflow-x: scroll;

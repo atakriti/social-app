@@ -57,12 +57,15 @@ function Mid() {
 
   return (
     <div className="mid">
+       {isStory && <div className="camera-component">
+          <CameraComponent setIsStory={setIsStory} isStory={isStory}/>
+        </div>}
       <div className="mid-stories">
         <span onClick={() => setIsStory(true)}>
           <BsPlusCircle />
           <h4>Add Story</h4>
         </span>
-        {isStory && <CameraComponent/>}
+       
         {/* Here must be replaced with the friends stories */}
         {stories.map((item, i) => (
           <div onClick={()=>handleClickStory(item)} key={i} className="singleStory">
