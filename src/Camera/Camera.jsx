@@ -130,6 +130,7 @@ const CameraComponent = ({setIsStory,isStory}) => {
       uploadBytes(uploadVideo,blob).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((ur) => {
            updateDoc(loggedInUser,{stories:[...currentStories,ur]})
+           setRecordedChunks([])
         })
       })
     } catch (error) {
