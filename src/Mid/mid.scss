@@ -5,6 +5,86 @@
   background-color: white;
   border-radius: 10px;
   box-shadow: 3px 3px 5px rgb(207, 207, 207);
+  // ===================== Ask local or camera =========
+  .openStory{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+    background: linear-gradient(
+      to top,
+      rgb(0, 0, 0) 10%,
+      rgba(0, 0, 0, 0.295) 60%,
+      rgb(0, 0, 0) 100%
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   .openStoryBigContainer{
+     background-color: white;
+    width: min(100% - 3%,300px);
+      padding: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    .openStoryContainer{
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+        width: 100%;
+      svg{
+        font-size: 2rem;
+      }
+      .camera-svg{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        &:hover{
+          svg{
+            fill: #1877f2;
+          }
+          h4{
+            color: #1877f2;
+          }
+        }
+      }
+      .upload-device{
+        .publish-device-svg{
+          fill: #1877F2;
+
+        }
+        label{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          cursor: pointer;
+          input{
+            display: none;
+          }
+          &:hover{
+            svg{
+              fill: #1877f2;
+            }
+            h4{
+              color: #1877f2;
+            }
+          }
+        }
+      }
+    }
+    .closeOpenStory{
+      margin-top: 1rem;
+      font-size: 1.3rem;
+      cursor: pointer;
+      &:hover{
+        color: red;
+      }
+    }
+   }
+  }
 
   // =================== Camera  =======================
   .camera-component{
@@ -72,6 +152,7 @@
       border-radius: 10px;
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: space-between;
       min-width: 10rem;
       min-height: 14rem;
@@ -109,12 +190,18 @@
       .photoURL {
         display: flex;
         width: 3rem;
+        margin-right: auto;
         img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           clip-path: circle(30%);
         }
+      }
+      .play-btn{
+        font-size: 3rem;
+        fill: white;
+        filter: drop-shadow(2px 3px 5px black);
       }
       h3 {
         font-size: 0.9rem;

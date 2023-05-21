@@ -34,14 +34,16 @@ const CameraComponent = ({setIsStory,isStory}) => {
     }
     return new Blob([ab], { type: mimeString });
   }
+  // ================================== End Convert base64 ===================
 
   const handleTakePhoto = (dataUri) => {
     setPhotoDataUri(dataUri);
     
     setIsPicTaken(true)
   };
+  // ================================================
   const handlePublishPhoto = async () => {
- // ================ Firebase ===============
+ // == Firebase ====
  let loggedInUser = doc(db,"users",findUser?.id)
  try {
    let getDocument = await getDoc(loggedInUser)
