@@ -22,6 +22,10 @@ function Mid() {
   const [isOpenStory,setIsOpenStory] = useState(false)
   const [uploadDeviceValue,setUploadDeviceValue] = useState(null)
   const [askUpload,setAskUpload] = useState(false)
+  // ======== POST
+  const [textPostValue,setTextPostValue] = useState("")
+  const [filePostValue,setFilePostValue] = useState(null)
+
   let handleClickStory = (story) => {
     setSelectedStory(story)
     setViewStory(true)
@@ -51,7 +55,7 @@ function Mid() {
 
   }
 
-  let handleChangeFile = (e) => {
+  let handleChangeFileStory = (e) => {
     setUploadDeviceValue(e.target.files[0])
     setAskUpload(true)
   }
@@ -60,6 +64,34 @@ function Mid() {
     setIsOpenStory(false)
     setAskUpload(false)
     setUploadDeviceValue(null)
+  }
+
+  // =================== post
+  let handleSubmitPost = async (e) => {
+    e.preventDefault()
+    let loggedInUser = doc(db,"users",findUser?.id)
+    try {
+        let getDocument = await getDoc(loggedInUser)
+        let currentPosts = await getDocument.get("posts") || []
+        let uploadFile = ref(storage,`files/${filePostValue?.type?.split("/")[0] + v4()}`)
+        // Here in this condition iam asking if i want to post only text, in order to not post undefined file, set it to null
+        if(filePostValue !== null ){
+          uploadBytes(uploadFile,filePostValue).then((snapshot) => {
+            getDownloadURL(snapshot.ref).then(url => {
+              updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url}]})
+              setTextPostValue("")
+              setFilePostValue(null)
+            })
+          })
+        }else{
+          updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null}]})
+          setTextPostValue("")
+        }
+       
+    } catch (error) {
+   alert(error.message.split("/")[1].replace(")", ""))
+    }
+
   }
 
 
@@ -84,7 +116,7 @@ function Mid() {
               ) : (
                 <label htmlFor="sto">
                  <BsFileEarmarkImageFill/>
-                 <input type="file" name="sto" id="sto" onChange={handleChangeFile} />
+                 <input type="file" name="sto" id="sto" onChange={handleChangeFileStory} />
                  <h4>Device</h4>
                </label>
               )}
@@ -141,19 +173,21 @@ function Mid() {
       </div>
       {/* ====================================== Form ====================== */}
       <div className="post-form">
-        <form action="">
+        <form onSubmit={handleSubmitPost}>
           {/* The name, image here must be replaced */}
-          <a><img src={logo} alt="" /></a>
-          <input type="text" name="" placeholder="What's new, Anwar?" /> 
+          <a><img src={user?.photoURL} alt="" /></a>
+          <input required type="text" name="textPost" placeholder={`What's new, ${findUser?.displayName} ?`} onChange={(e) => setTextPostValue(e.target.value)} value={textPostValue}  /> 
           <div className="post-form-btns">
-            <label htmlFor="">
+            <label htmlFor="filePost">
               <BiAddToQueue/>
+              <input type="file" name="filePost" id="filePost" onChange={(e) => setFilePostValue(e.target.files[0])} />
             </label>
             <button><h3>Post</h3> <BsPencilFill/></button>
           </div>
 
         </form>
       </div>
+      {/* ================================================ POSTS ========================== */}
     </div>
   );
 }
