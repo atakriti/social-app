@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
-import { BsPlusCircle,BsPencilFill,BsFileEarmarkImageFill,BsFillCameraFill,BsFillPlayCircleFill,BsFillSendFill } from "react-icons/bs";
+import { BsPlusCircle,BsPencilFill,BsFileEarmarkImageFill,BsFillCameraFill,BsFillPlayCircleFill,BsFillSendFill,BsCheckCircleFill, BsFillTrashFill, BsShareFill } from "react-icons/bs";
 import {BiAddToQueue} from "react-icons/bi"
+import {AiFillLike} from "react-icons/ai"
 import videoLion from "../images/video-lion.mp4";
 import woman from "../images/woman.mp4";
 import logo from "../images/anwar-logo.jpg";
@@ -78,13 +79,13 @@ function Mid() {
         if(filePostValue !== null ){
           uploadBytes(uploadFile,filePostValue).then((snapshot) => {
             getDownloadURL(snapshot.ref).then(url => {
-              updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url}]})
+              updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url,likes:0}]})
               setTextPostValue("")
               setFilePostValue(null)
             })
           })
         }else{
-          updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null}]})
+          updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null,likes:0}]})
           setTextPostValue("")
         }
        
@@ -179,7 +180,11 @@ function Mid() {
           <input required type="text" name="textPost" placeholder={`What's new, ${findUser?.displayName} ?`} onChange={(e) => setTextPostValue(e.target.value)} value={textPostValue}  /> 
           <div className="post-form-btns">
             <label htmlFor="filePost">
-              <BiAddToQueue/>
+              {filePostValue !== null ? (
+                <BsCheckCircleFill/>
+              ) : (
+                <BiAddToQueue/>
+              )}
               <input type="file" name="filePost" id="filePost" onChange={(e) => setFilePostValue(e.target.files[0])} />
             </label>
             <button><h3>Post</h3> <BsPencilFill/></button>
@@ -188,6 +193,30 @@ function Mid() {
         </form>
       </div>
       {/* ================================================ POSTS ========================== */}
+      <div className="posts">
+      {findUser?.posts?.map(item => (
+        <div className="singlePost">
+          {item.file.includes("image") ? (
+            <a><img src={item.file} alt="" /></a>
+          ):(
+            <div className="postVideo">
+              <video muted autoPlay src={item.file} />
+              <div className="playVideoPostContainer">
+
+              <BsFillPlayCircleFill className="playVideoPost"/>
+              </div>
+            </div>
+          )}
+          <h3>Likes {item.likes}</h3>
+          <div className="post-btns">
+            <AiFillLike/>
+            <BsShareFill/>
+            <BsFillTrashFill/>
+          </div>
+        </div>
+      ))}
+      </div>
+     
     </div>
   );
 }
