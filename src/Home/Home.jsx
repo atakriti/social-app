@@ -7,9 +7,9 @@ import Header from '../Header/Header'
 function Home() {
   return (
     <div className='home'>
-        <Header/>
+        {/* <Header/> */}
        <div className='home-container'>
-         <Left/>
+         {/* <Left/> */}
          <Mid/>
          <Right/>
        </div>

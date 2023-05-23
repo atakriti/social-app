@@ -1,5 +1,5 @@
 .mid {
-  flex: 0.6;
+  flex: 1;
   // border: 1px red solid;
   padding: 1rem;
   background-color: white;
@@ -117,7 +117,7 @@
   .mid-stories {
     display: flex;
     overflow-x: scroll;
-    width: 50vw;
+    width: 56vw;
     gap: 2rem;
     padding-bottom: 1rem;
     &::-webkit-scrollbar {
@@ -292,6 +292,7 @@
           margin-right: 1rem;
           svg {
             font-size: 1.5rem;
+            cursor: pointer;
           }
           input{
             display: none;
@@ -329,6 +330,12 @@
       padding: 0.5rem;
       cursor: pointer;
       box-shadow: 3px 3px 5px rgb(187, 187, 187);
+      h2{
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        border-bottom: 1px solid #cfcfcf;
+        padding-bottom: 1rem;
+      }
       a{
         display: flex;
         img{
@@ -366,7 +373,76 @@
           }
         }
       }
-     
+      .post-btns{
+        width: min(100%,130px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1rem 0;
+        svg{
+          font-size: 1.2rem;
+          &:hover{
+            transform: scale(0.9);
+          }
+          &:nth-child(3){
+            fill: red;
+          }
+        }
+      }
+     .commentsForm{
+      border: 1px lightgray solid;
+      display: flex;
+      justify-content: space-between;
+      input{
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        outline: none;
+
+      }
+      button{
+        padding: 0 0.5rem;
+        border: none;
+        outline: none;
+        transition: 0.5s;
+        &:hover{
+        transition: 0.5s;
+          background-color: #1877F2;
+          svg{
+            fill: white;
+          }
+        }
+      }
+     }
+     .postComments{
+      list-style: none;
+      height:7rem;
+      overflow-y: auto;
+      &::-webkit-scrollbar{
+        background-color: white;
+        width: 0.3rem;
+      }
+      &::-webkit-scrollbar-thumb{
+        background-color: lightgray;
+      }
+      li{
+        border-bottom: 1px solid lightgray;
+        padding: 0.5rem;
+        span{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+         h6{
+          color: gray;
+          font-size: 0.9rem;
+         }
+         svg{
+          font-size: 0.9rem;
+          fill: red;
+         }
+        }
+      }
+     }
     }
   }
 }
