@@ -2,16 +2,13 @@ import React, { useContext, useState } from "react";
 import { BsPlusCircle,BsPencilFill,BsFileEarmarkImageFill,BsFillCameraFill,BsFillPlayCircleFill,BsFillSendFill,BsCheckCircleFill, BsFillTrashFill, BsShareFill, BsSendFill } from "react-icons/bs";
 import {BiAddToQueue} from "react-icons/bi"
 import {AiFillLike} from "react-icons/ai"
-import videoLion from "../images/video-lion.mp4";
-import woman from "../images/woman.mp4";
-import logo from "../images/anwar-logo.jpg";
 import "./mid.scss";
 import CameraComponent from "../Camera/Camera";
 import { context } from "../ContextFun";
 // ============== firebase =========
 import { updateDoc,doc,getDoc } from 'firebase/firestore'
 import { db,storage } from '../firebase'
-import {ref,uploadBytes,listAll, getDownloadURL,deleteObject} from "firebase/storage"
+import {ref,uploadBytes,getDownloadURL,deleteObject} from "firebase/storage"
 
 import { v4 } from 'uuid';
 
@@ -29,7 +26,7 @@ function Mid() {
   const [filePostValue,setFilePostValue] = useState(null)
   const [commentText,setCommentText] = useState({
     text:"",
-    index:null,
+    idx:null,
     user:"",
     userId:""
   })
@@ -86,13 +83,13 @@ function Mid() {
         if(filePostValue !== null ){
           uploadBytes(uploadFile,filePostValue).then((snapshot) => {
             getDownloadURL(snapshot.ref).then(url => {
-              updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url,likes:0,comments:[]}]})
+              updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url,likes:0,comments:[],likesBy:[]}]})
               setTextPostValue("")
               setFilePostValue(null)
             })
           })
         }else{
-          updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null,likes:0,comments:[]}]})
+          updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null,likes:0,comments:[],likesBy:[]}]})
           setTextPostValue("")
         }
        
@@ -124,9 +121,11 @@ function Mid() {
   }
   // =================== Comment Post ===========
   let handleChangeComment = (e,index) => {
-   setCommentText({...commentText,index:index})
-  setCommentText(prev => index === prev.index ? {...prev,text:e.target.value} : prev)
+   setCommentText({...commentText,idx:index})
+  setCommentText(prev => index === prev.idx ? {...prev,text:e.target.value} : prev)
   }
+
+
   let handleComment = async (e,index) => {
     e.preventDefault()
     let loggedInUser = doc(db,"users",findUser?.id)
@@ -138,11 +137,59 @@ function Mid() {
       findCurrentPost.comments.push({...commentText,user:findUser?.displayName,userId:findUser?.id}); // Update the comments array directly
         // console.log("🚀 ~ file: Mid.jsx:137 ~ handleComment ~ updatedPost:", updatedPost)
         await updateDoc(loggedInUser, { posts: currentPosts }); // Update the posts field      
-      
+      setCommentText({
+        text:"",
+        index:null,
+        user:"",
+        userId:""
+      })
     } catch (error) {
    alert(error.message.split("/")[1].replace(")", ""))
     }
 
+  }
+  // ============= HandleDeleteComment ===========
+  let handleDeleteComment = async (i,index) => {
+    // index is the index of the post when mapping
+    // i is the index of the comment when mapping the comments inside the post
+    try {
+      let loggedInUser = doc(db,"users",findUser?.id)
+        let getDocument = await getDoc(loggedInUser)
+        let currentPosts = await getDocument.get("posts") || []
+        let findCurrentPost = currentPosts?.find((item,ind) => ind === index)
+      
+        
+        let updated = findCurrentPost?.comments.filter((item,inde) => inde !== i)
+          findCurrentPost.comments = updated
+        // This ↓ can effect the original one
+        await updateDoc(loggedInUser,{posts:currentPosts})
+      
+    } catch (error) {
+   alert(error.message)
+      
+    }
+  }
+  // ===================== Like ==================
+  let handleLike = async (index) => {
+    let loggedInUser = doc(db,"users",findUser?.id)
+    try {
+        let getDocument = await getDoc(loggedInUser)
+        let currentPosts = await getDocument.get("posts") || []
+        let findCurrentPost = currentPosts.find((item,i) => i === index)
+        if(findCurrentPost.likesBy.some((item) => item === findUser?.id)){
+          let newPosts = currentPosts.map((item,indx) => indx === index ? {...item,likes:item.likes - 1, likesBy:item.likesBy.filter((item) => item !== findUser?.id)} : item)
+           updateDoc(loggedInUser,{posts:newPosts})
+        }else{
+          let newPosts = currentPosts.map((item,indx) => indx === index ? {...item,likes:item.likes + 1, likesBy:[...item.likesBy,findUser?.id]} : item)
+          // let newPosts = {...findCurrentPost,likes:findCurrentPost.likes - 1,likesBy:[...findCurrentPost.likesBy,findUser?.id] }
+          // let newPosts =  {...findCurrentPost,{...findCurrentPost,likes:findCurrentPost.likes + 1,likesBy:[...findCurrentPost.likesBy,findUser?.id] }}
+          // findCurrentPost = newPosts
+           updateDoc(loggedInUser,{posts:newPosts})
+        }
+
+    } catch (error) {
+        alert(error.message)
+    }
   }
 
 
@@ -263,19 +310,19 @@ function Mid() {
           
           <h3>Likes {item.likes}</h3>
           <div className="post-btns">
-            <AiFillLike/>
+            <AiFillLike onClick={() => handleLike(index)} style={item.likesBy.some(ite => ite === findUser?.id) && {fill:"#1877F2"}} />
             <BsShareFill/>
             <BsFillTrashFill onClick={() => handleDeletePost(index,item.file)}/>
           </div>
           <form className="commentsForm" onSubmit={(e) => handleComment(e,index)} >
-            <input type="text" name="commentText" placeholder="Type your comment..." value={commentText.index === index ? commentText.text : ""} onChange={(e) => handleChangeComment(e,index)}/>
+            <input required type="text" name="commentText" placeholder="Type your comment..." value={commentText.idx === index ? commentText.text : ""} onChange={(e) => handleChangeComment(e,index)}/>
             <button><BsSendFill/></button>
           </form>
           {item?.comments?.length > 0 && (
           <ul className="postComments">
-              {item.comments.map((it,i) => (
+              {item?.comments.map((it,i) => (
                 <li key={i}>
-                  <span><h6>{it.text}</h6>{it?.userId === findUser?.id && <BsFillTrashFill/>}</span>
+                  <span><h6>{it.user}</h6>{it?.userId === findUser?.id &&  <BsFillTrashFill onClick={() => handleDeleteComment(i,index)}/>}</span>
                   <h4>{it.text}</h4>
                 </li>
               ))}
