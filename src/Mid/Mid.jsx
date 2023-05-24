@@ -3,18 +3,22 @@ import { BsPlusCircle,BsPencilFill,BsFileEarmarkImageFill,BsFillCameraFill,BsFil
 import {BiAddToQueue} from "react-icons/bi"
 import {AiFillLike} from "react-icons/ai"
 import "./mid.scss";
+import { useParams } from "react-router-dom";
 import CameraComponent from "../Camera/Camera";
 import { context } from "../ContextFun";
+import FlipMove from 'react-flip-move';
 // ============== firebase =========
 import { updateDoc,doc,getDoc } from 'firebase/firestore'
 import { db,storage } from '../firebase'
 import {ref,uploadBytes,getDownloadURL,deleteObject} from "firebase/storage"
 
 import { v4 } from 'uuid';
+import avatar from "../images/avatar.png" 
 
 function Mid() {
-  const {findUser,user} = useContext(context)
-  console.log("🚀 ~ file: Mid.jsx:20 ~ Mid ~ findUser:", findUser)
+  const {findUser,user,users} = useContext(context)
+
+
   let [viewStory, setViewStory] = useState(false);
   let [selectedStory,setSelectedStory] = useState()
   const [isStory,setIsStory] = useState(false)
@@ -181,9 +185,6 @@ function Mid() {
            updateDoc(loggedInUser,{posts:newPosts})
         }else{
           let newPosts = currentPosts.map((item,indx) => indx === index ? {...item,likes:item.likes + 1, likesBy:[...item.likesBy,findUser?.id]} : item)
-          // let newPosts = {...findCurrentPost,likes:findCurrentPost.likes - 1,likesBy:[...findCurrentPost.likesBy,findUser?.id] }
-          // let newPosts =  {...findCurrentPost,{...findCurrentPost,likes:findCurrentPost.likes + 1,likesBy:[...findCurrentPost.likesBy,findUser?.id] }}
-          // findCurrentPost = newPosts
            updateDoc(loggedInUser,{posts:newPosts})
         }
 
@@ -206,7 +207,7 @@ function Mid() {
              {/* ============= Upload file ========== */} 
              <form className="upload-device" action="" onSubmit={handleUploadDevice}>
               {askUpload ? (
-                <label>
+                <label onClick={handleUploadDevice}>
                   <BsFillSendFill className="publish-device-svg"/>
                   <h4>Upload</h4>
                 </label>
@@ -238,10 +239,15 @@ function Mid() {
         </span>
        
         {/* Here must be replaced with the friends stories */}
-        {findUser?.stories.map((item, i) => (
+    
+
+
+
+
+        {findUser?.stories?.map((item, i) => (
           <div onClick={()=>handleClickStory(item)} key={i} className="singleStory">
             <a className="photoURL">
-              <img  src={user?.photoURL} alt="" />
+              <img  src={user?.photoURL === null ? avatar : user?.photoURL} alt="" />
             </a>
             {item.includes("video") && (
             <BsFillPlayCircleFill className="play-btn"/>
@@ -273,7 +279,7 @@ function Mid() {
       <div className="post-form">
         <form onSubmit={handleSubmitPost}>
           {/* The name, image here must be replaced */}
-          <a><img src={user?.photoURL} alt="" /></a>
+          <a><img src={user?.photoURL === null ? avatar : user?.photoURL} alt="" /></a>
           <input required type="text" name="textPost" placeholder={`What's new, ${findUser?.displayName} ?`} onChange={(e) => setTextPostValue(e.target.value)} value={textPostValue}  /> 
           <div className="post-form-btns">
             <label htmlFor="filePost">
@@ -291,9 +297,10 @@ function Mid() {
       </div>
       {/* ================================================ POSTS ========================== */}
       <div className="posts">
+        <FlipMove>
       {findUser?.posts?.map((item,index) => (
         <div key={index} className="singlePost">
-          <h2>{item.text}</h2>
+          <h2><a><img src={user?.photoURL === null ? avatar : user?.photoURL} alt="" /></a>{item.text}</h2>
           {item?.file?.includes("image") &&  (
             <a onClick={()=>handleClickStory(item.file)} ><img src={item.file} alt="" /></a>
           )}
@@ -322,7 +329,7 @@ function Mid() {
           <ul className="postComments">
               {item?.comments.map((it,i) => (
                 <li key={i}>
-                  <span><h6>{it.user}</h6>{it?.userId === findUser?.id &&  <BsFillTrashFill onClick={() => handleDeleteComment(i,index)}/>}</span>
+                  <span><h6><a><img src={user?.photoURL === null ? avatar : user?.photoURL} alt="" /></a>{it.user}</h6>{it?.userId === findUser?.id &&  <BsFillTrashFill onClick={() => handleDeleteComment(i,index)}/>}</span>
                   <h4>{it.text}</h4>
                 </li>
               ))}
@@ -331,6 +338,7 @@ function Mid() {
          
         </div>
       ))}
+      </FlipMove>
       </div>
      
     </div>

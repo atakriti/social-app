@@ -157,13 +157,13 @@ const CameraComponent = ({setIsStory,isStory}) => {
   }
 
  //! This another way to close the camera with stopping the camera functionality 
-  // useEffect(() => {
-  //   if (!isStory && mediaStream) {
-  //     mediaStream.getTracks().forEach(track => track.stop());
-  //     setMediaStream(null);
-  //     setPhotoDataUri(null);
-  //   }
-  // }, [isStory, mediaStream]);
+  useEffect(() => {
+    if (!isStory && mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop());
+      setMediaStream(null);
+      setPhotoDataUri(null);
+    }
+  }, [isStory, mediaStream]);
   return (
     <div className='camera'>
       <Camera

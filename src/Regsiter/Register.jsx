@@ -48,7 +48,8 @@ function Register() {
         friends:[],
         chat:[],
         posts:[],
-        stories:[]
+        stories:[],
+        photoURL:user.photoURL
       }).then(() => navigate("/home") )
       setSuValue({
         displayName: "",
@@ -73,7 +74,8 @@ function Register() {
           friends:[],
           chat:[],
           posts:[],
-          stories:[]
+          stories:[],
+          photoURL:user.photoURL
         }).then(() => navigate("/home") )
         
         

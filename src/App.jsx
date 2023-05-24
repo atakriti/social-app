@@ -6,6 +6,7 @@ import Home from "./Home/Home";
 import { context } from "./ContextFun";
 import Header from "./Header/Header";
 import Left from "./Left/Left";
+import People from "./People/People";
 function App() {
   let location = useLocation();
 
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Register />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/people" element={<People />} />
         </Routes>
       </div>
     </div>
