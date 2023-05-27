@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {BiHomeAlt} from "react-icons/bi"
 import {BsFillChatFill} from "react-icons/bs"
 import {FiUsers} from "react-icons/fi"
@@ -6,9 +6,11 @@ import {MdPermMedia} from "react-icons/md"
 import {CgProfile} from "react-icons/cg"
 import {AiFillSetting} from "react-icons/ai"
 import "./left.scss"
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate,useParams } from 'react-router-dom'
 function Left() {
     const navigate = useNavigate()
+    let location = useLocation();
+    console.log("🚀 ~ file: Left.jsx:13 ~ Left ~ location:", location.pathname.replace("/",""))
     const lists = [
         {
             title:"home",
@@ -35,11 +37,16 @@ function Left() {
             logo: AiFillSetting
         }
     ]
+    let [selectedItem,setSelectedItem] = useState(location.pathname.replace("/",""))
+    let handleClick = (item) => {
+        navigate(`/${item?.title}`)
+        setSelectedItem(item.title)
+    }
   return (
     <div className='left'>
         <ul>
             {lists.map((item,i) => (
-                <li onClick={() => navigate(`/${item?.title}`)} key={i}><item.logo/> <h4>{item.title[0].toUpperCase() + item.title.slice(1)}</h4></li>
+                <li  className={item.title === selectedItem ? 'list listEffect':'list'} onClick={() => handleClick(item)} key={i}><item.logo/> <h4>{item.title[0].toUpperCase() + item.title.slice(1)}</h4></li>
             ))}
         </ul>
     </div>

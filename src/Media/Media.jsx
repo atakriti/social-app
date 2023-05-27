@@ -68,10 +68,18 @@ function Media() {
         </div>
       )}
       <div className="media-headers">
-        <button onClick={() => setSwitchMedia(1)}>Posts</button>
-        <button onClick={() => setSwitchMedia(2)}>Stories</button>
+        <button style={switchMedia === 1 ? {backgroundColor:"gray"} : {}} onClick={() => setSwitchMedia(1)}>Posts</button>
+        <button style={switchMedia === 2 ? {backgroundColor:"gray"} : {}} onClick={() => setSwitchMedia(2)}>Stories</button>
       </div>
       <div className="mediaContainer">
+        {/* =================== IF NO stories or posts ================ */}
+            {(switchMedia === 1 && findUser?.posts.some(item => item.file) === false) && (
+                <h1>There are no posts media</h1>
+            ) }
+              {(switchMedia === 2 && findUser.stories.length === 0) && (
+                <h1>There are no stories</h1>
+            ) }
+
         {switchMedia === 1 &&
           findUser?.posts?.map(
             (item, index) =>

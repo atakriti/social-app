@@ -49,6 +49,7 @@ function Register() {
         chat:[],
         posts:[],
         stories:[],
+        friendsRequests:[],
         photoURL:user.photoURL
       }).then(() => navigate("/home") )
       setSuValue({
@@ -75,6 +76,7 @@ function Register() {
           chat:[],
           posts:[],
           stories:[],
+          friendsRequests:[],
           photoURL:user.photoURL
         }).then(() => navigate("/home") )
         
@@ -147,7 +149,7 @@ function Register() {
             <input
               type="password"
               name="suPassword"
-              placeholder="Enter your Password..."
+              placeholder="Enter your Password...(Min-8 characters)"
               value={suValue.suPassword}
             />
             <button>Sign up</button>

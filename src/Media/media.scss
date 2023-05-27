@@ -1,6 +1,7 @@
 .media {
   width: 70%;
-  border: 1px red solid;
+  padding:0 1rem;
+
   .viewStory {
     position: fixed;
     top: 0;
@@ -100,7 +101,6 @@
       }
       .postVideo{
         position: relative;
-        border: 1px red solid;
         height: 20rem;
         border-radius: 10px;
         overflow: hidden;
