@@ -2,6 +2,28 @@
     // border: 1px red solid;
     width: 70%;
     padding:0 1rem;
+    .people-headers {
+        width: min(100%, 400px);
+        margin: 0 auto;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        button {
+          background-color: #1877f2;
+          border: none;
+          outline: none;
+          color: white;
+          padding: 0.5rem 0;
+          width: 8rem;
+          border-radius: 5px;
+          font-size: 0.9rem;
+          cursor: pointer;
+          &:hover{
+            background-color: #0a5bc5;
+          }
+        }
+      }
     .people-container{
         // border: 2px red solid;
         display: flex;
@@ -51,6 +73,35 @@
             }
             
         }
+
+        .acc_{
+            background-color: #1877F2;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 0.5rem 0;
+            width: min(100% - 3%,150px);
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin: 0.5rem 0;
+            &:hover{
+                background-color: #4393fd;
+            }
+        }
+        .rej-btn_{
+            border: 1px #1877F2 solid;
+            background-color: inherit;
+            color: black;
+            &:hover{
+                border: 1px red solid;
+            background-color: inherit;
+
+            }
+        }
+
+
+
+
     }
    
     
