@@ -7,6 +7,7 @@ import { context } from "./ContextFun";
 import Header from "./Header/Header";
 import Left from "./Left/Left";
 import People from "./People/People";
+import Media from "./Media/Media";
 function App() {
   let location = useLocation();
 
@@ -21,6 +22,7 @@ function App() {
           <Route exact path="/" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/people" element={<People />} />
+          <Route path="/media" element={<Media />} />
         </Routes>
       </div>
     </div>

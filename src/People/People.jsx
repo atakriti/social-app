@@ -5,7 +5,6 @@ import avatar from "../images/avatar.png"
 import {RiUserAddFill} from "react-icons/ri"
 function People() {
     let {users} = useContext(context)
-    console.log("🚀 ~ file: People.jsx:7 ~ People ~ users:", users)
   return (
     <div className='people'>
         <div className="people-container">
