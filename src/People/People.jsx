@@ -31,6 +31,23 @@ function People() {
     }
   };
 
+  const deleteFriend = async (item) => {
+    let loggedInUser = doc(db,"users",findUser?.id)
+    let selectedUser = doc(db,"users",item?.id)
+    try {
+      let getMyDocument = await getDoc(loggedInUser)
+      let myFriendsArray = await getMyDocument.get("friends") || []
+      let getHisDocument = await getDoc(selectedUser)
+      let hisFriendsArray = await getHisDocument.get("friends") || []
+      let filterMine = myFriendsArray.filter(ite => ite?.id !== item?.id)
+      updateDoc(loggedInUser,{friends:filterMine})
+      let filterHim = hisFriendsArray.filter(ite => ite?.id !== findUser?.id)
+      updateDoc(selectedUser,{friends:filterHim})
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
   return (
     <div className="people">
       <div className="people-headers">
@@ -62,6 +79,12 @@ function People() {
                   />
                 </a>
                 <h4>{item.displayName}</h4>
+
+
+
+
+
+
                 {item.friendsRequests.some((it) => it === findUser?.id) ? (
                   <button style={{ backgroundColor: "gray" }}>Pending</button>
                 ) : (
@@ -72,10 +95,15 @@ function People() {
 
                         </div>
                     ) : (
+                      findUser.friends.some((ite) => ite.id === item.id) ? (
+                        <button onClick={() => deleteFriend(item)}>Delete</button>
+                      ) : (
                         <button onClick={() => handleAddFriend(item)}>
                         <RiUserAddFill />
                         Add friend
                       </button>
+                      )
+                       
                     )
                  
                 )}
