@@ -7,9 +7,8 @@ import { db } from '../firebase';
 
 function Right() {
   let {findUser,users} = useContext(context)
-  console.log("🚀 ~ file: Right.jsx:10 ~ Right ~ findUser:", findUser)
   let filterd = []
- 
+//  Here i am getting the people compared between users and my friendsReq
   for(let i = 0; i < users?.length; i++){
     let user = users[i]
     for(let j = 0; j < findUser?.friendsRequests?.length; j++){
@@ -35,18 +34,21 @@ function Right() {
       let hisFriendsArray = await getHisDocument.get("friends") || []
 
       let filterd = myFriendsReqArray.filter(it => it !== item?.id)
+
       if(myFriendsArray.some(ite => ite?.id === item?.id)){
         return;
       }else{
-        myFriendsArray.push({...getHisDocument.data(),id:item?.id})
+        myFriendsArray.push(item?.id)
         updateDoc(loggedInUser,{friendsRequests:filterd,friends:myFriendsArray})
       }
       if(hisFriendsArray.some(ite => ite?.id === findUser?.id)){
         return;
       }else{
-        hisFriendsArray.push({...getMyDocument.data(),id:findUser?.id})
+        hisFriendsArray.push(findUser?.id)
         updateDoc(selectedUser,{friends:hisFriendsArray})
       }
+
+
     } catch (error) {
       alert(error.message)
     }
@@ -64,6 +66,7 @@ function Right() {
       alert(error.message)
     }
   }
+
 
 
 

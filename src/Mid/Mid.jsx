@@ -17,7 +17,9 @@ import avatar from "../images/avatar.png"
 
 function Mid() {
   const {findUser,user,users} = useContext(context)
-
+// ===================================================
+  let filterFriends = users?.filter(user => findUser?.friends?.some(item => item === user.id))
+// ===================================================
 
   let [viewStory, setViewStory] = useState(false);
   let [selectedStory,setSelectedStory] = useState()
@@ -152,6 +154,30 @@ function Mid() {
     }
 
   }
+  let handleCommentThem = async (e,index,selUser) => {
+    e.preventDefault()
+    let selectedUser = doc(db,"users",selUser?.id)
+
+
+    try {
+      let getDocument = await getDoc(selectedUser)
+      let currentPosts = await getDocument.get("posts") || []
+      let findCurrentPost = currentPosts?.find((item,i) => i === index)
+      // let updatedPost = {...findCurrentPost,comments:[...findCurrentPost.comments,commentText]}
+      findCurrentPost.comments.push({...commentText,user:findUser?.displayName,userId:findUser?.id}); // Update the comments array directly
+        // console.log("🚀 ~ file: Mid.jsx:137 ~ handleComment ~ updatedPost:", updatedPost)
+        await updateDoc(selectedUser, { posts: currentPosts }); // Update the posts field      
+      setCommentText({
+        text:"",
+        index:null,
+        user:"",
+        userId:""
+      })
+    } catch (error) {
+   alert(error.message.split("/")[1].replace(")", ""))
+    }
+
+  }
   // ============= HandleDeleteComment ===========
   let handleDeleteComment = async (i,index) => {
     // index is the index of the post when mapping
@@ -167,6 +193,26 @@ function Mid() {
           findCurrentPost.comments = updated
         // This ↓ can effect the original one
         await updateDoc(loggedInUser,{posts:currentPosts})
+      
+    } catch (error) {
+   alert(error.message)
+      
+    }
+  }
+  let handleDeleteCommentThem = async (i,index,selUser) => {
+    // index is the index of the post when mapping
+    // i is the index of the comment when mapping the comments inside the post
+    try {
+      let selectedUser = doc(db,"users",selUser?.id)
+        let getDocument = await getDoc(selectedUser)
+        let currentPosts = await getDocument.get("posts") || []
+        let findCurrentPost = currentPosts?.find((item,ind) => ind === index)
+      
+        
+        let updated = findCurrentPost?.comments.filter((item,inde) => inde !== i)
+          findCurrentPost.comments = updated
+        // This ↓ can effect the original one
+        await updateDoc(selectedUser,{posts:currentPosts})
       
     } catch (error) {
    alert(error.message)
@@ -192,6 +238,26 @@ function Mid() {
         alert(error.message)
     }
   }
+
+  let handleLikeThem = async (index,selUser) => {
+    let selectedUser = doc(db,"users",selUser?.id)
+    try {
+        let getDocument = await getDoc(selectedUser)
+        let currentPosts = await getDocument.get("posts") || []
+        let findCurrentPost = currentPosts.find((item,i) => i === index)
+        if(findCurrentPost.likesBy.some((item) => item === findUser?.id)){
+          let newPosts = currentPosts.map((item,indx) => indx === index ? {...item,likes:item.likes - 1, likesBy:item.likesBy.filter((item) => item !== findUser?.id)} : item)
+           updateDoc(selectedUser,{posts:newPosts})
+        }else{
+          let newPosts = currentPosts.map((item,indx) => indx === index ? {...item,likes:item.likes + 1, likesBy:[...item.likesBy,findUser?.id]} : item)
+           updateDoc(selectedUser,{posts:newPosts})
+        }
+
+    } catch (error) {
+        alert(error.message)
+    }
+  }
+
 
 
   return (
@@ -243,7 +309,7 @@ function Mid() {
 
 
 
-
+                {/* ================= Mapping my stories =========== */}
         {findUser?.stories?.map((item, i) => (
           <div onClick={()=>handleClickStory(item)} key={i} className="singleStory">
             <a className="photoURL">
@@ -262,6 +328,29 @@ function Mid() {
             )}
           </div>
         ))}
+        {/* ============================ Mapping the friends Stories ============= */}
+          {filterFriends?.map((it) => (
+            it?.stories?.map((item,i) => (
+              <div onClick={()=>handleClickStory(item)} key={i} className="singleStory">
+            <a className="photoURL">
+              <img  src={it?.photoURL === null ? avatar : it?.photoURL} alt="" />
+            </a>
+            {item.includes("video") && (
+            <BsFillPlayCircleFill className="play-btn"/>
+            )}
+            <h3>{it.displayName}</h3>
+            <video muted autoPlay loop >
+              <source src={item} />
+            </video>
+            {item.includes("image") && (
+
+            <img className="image-story" src={item} alt="" />
+            )}
+          </div>
+            ))
+          ))}
+          
+              
         {/* ====================================== View Story ================ */}
         {viewStory && <div className="viewStory">
             <h6 onClick={() =>setViewStory(false)}>X</h6>
@@ -327,7 +416,7 @@ function Mid() {
           </form>
           {item?.comments?.length > 0 && (
           <ul className="postComments">
-              {item?.comments.map((it,i) => (
+              {item?.comments?.map((it,i) => (
                 <li key={i}>
                   <span><h6><a><img src={user?.photoURL === null ? avatar : user?.photoURL} alt="" /></a>{it.user}</h6>{it?.userId === findUser?.id &&  <BsFillTrashFill onClick={() => handleDeleteComment(i,index)}/>}</span>
                   <h4>{it.text}</h4>
@@ -339,6 +428,49 @@ function Mid() {
         </div>
       ))}
       </FlipMove>
+
+{/* ============================ Mapping the friends Posts ============= */}
+{filterFriends?.map((singleFriend) => (
+            singleFriend?.posts?.map((item,index) => (
+              <div key={index} className="singlePost">
+              <h2><a><img src={singleFriend?.photoURL === null ? avatar : singleFriend?.photoURL} alt="" /></a>{item.text}</h2>
+              {item?.file?.includes("image") &&  (
+                <a onClick={()=>handleClickStory(item.file)} ><img src={item.file} alt="" /></a>
+              )}
+              {item?.file?.includes("video") && (
+     <div onClick={()=>handleClickStory(item.file)} className="postVideo">
+     <video  muted autoPlay src={item.file} />
+     <div className="playVideoPostContainer">
+    
+     <BsFillPlayCircleFill className="playVideoPost"/>
+     </div>
+    </div>
+              )}
+               
+              
+              <h3>Likes {item.likes}</h3>
+              <div className="post-btns">
+                <AiFillLike onClick={() => handleLikeThem(index,singleFriend)} style={item.likesBy.some(ite => ite === findUser?.id) && {fill:"#1877F2"}} />
+              </div>
+              <form className="commentsForm" onSubmit={(e) => handleCommentThem(e,index,singleFriend)} >
+                <input required type="text" name="commentText" placeholder="Type your comment..." value={commentText.idx === index ? commentText.text : ""} onChange={(e) => handleChangeComment(e,index)}/>
+                <button><BsSendFill/></button>
+              </form>
+              {item?.comments?.length > 0 && (
+              <ul className="postComments">
+                  {item?.comments.map((it,i) => (
+                    <li key={i}>
+                      <span><h6><a><img src={singleFriend?.photoURL === null ? avatar : singleFriend?.photoURL} alt="" /></a>{it.user}</h6>{it?.userId === findUser?.id &&  <BsFillTrashFill onClick={() => handleDeleteCommentThem(i,index,singleFriend)}/>}</span>
+                      <h4>{it.text}</h4>
+                    </li>
+                  ))}
+              </ul>
+              )}
+             
+            </div>
+            ))
+          ))}
+
       </div>
      
     </div>
