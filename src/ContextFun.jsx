@@ -6,7 +6,6 @@ export const context = createContext()
 function ContextFun({children}) {
   // Here user will get u the full object from the auth from firebase, no matter if google or normal auth
     const [user,setUser] = useState()
-    console.log("🚀 ~ file: ContextFun.jsx:9 ~ ContextFun ~ user:", user)
     let [users, setUsers] = useState()
     let findUser = users?.find(item => item?.email === user?.email)
 

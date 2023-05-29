@@ -8,6 +8,7 @@ import Header from "./Header/Header";
 import Left from "./Left/Left";
 import People from "./People/People";
 import Media from "./Media/Media";
+import Chat from "./Chat/Chat";
 function App() {
   let location = useLocation();
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/people" element={<People />} />
           <Route path="/media" element={<Media />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
       </div>
     </div>

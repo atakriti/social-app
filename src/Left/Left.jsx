@@ -10,7 +10,6 @@ import { useLocation, useNavigate,useParams } from 'react-router-dom'
 function Left() {
     const navigate = useNavigate()
     let location = useLocation();
-    console.log("🚀 ~ file: Left.jsx:13 ~ Left ~ location:", location.pathname.replace("/",""))
     const lists = [
         {
             title:"home",

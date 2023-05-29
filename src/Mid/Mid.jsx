@@ -19,6 +19,7 @@ function Mid() {
   const {findUser,user,users} = useContext(context)
 // ===================================================
   let filterFriends = users?.filter(user => findUser?.friends?.some(item => item === user.id))
+  console.log("🚀 ~ file: Mid.jsx:22 ~ Mid ~ filterFriends:", filterFriends)
 // ===================================================
 
   let [viewStory, setViewStory] = useState(false);
@@ -140,7 +141,7 @@ function Mid() {
       let currentPosts = await getDocument.get("posts") || []
       let findCurrentPost = currentPosts?.find((item,i) => i === index)
       // let updatedPost = {...findCurrentPost,comments:[...findCurrentPost.comments,commentText]}
-      findCurrentPost.comments.push({...commentText,user:findUser?.displayName,userId:findUser?.id}); // Update the comments array directly
+      findCurrentPost.comments.push({...commentText,user:findUser?.displayName,userId:findUser?.id,photoURL:findUser?.photoURL}); // Update the comments array directly
         // console.log("🚀 ~ file: Mid.jsx:137 ~ handleComment ~ updatedPost:", updatedPost)
         await updateDoc(loggedInUser, { posts: currentPosts }); // Update the posts field      
       setCommentText({
@@ -164,7 +165,7 @@ function Mid() {
       let currentPosts = await getDocument.get("posts") || []
       let findCurrentPost = currentPosts?.find((item,i) => i === index)
       // let updatedPost = {...findCurrentPost,comments:[...findCurrentPost.comments,commentText]}
-      findCurrentPost.comments.push({...commentText,user:findUser?.displayName,userId:findUser?.id}); // Update the comments array directly
+      findCurrentPost.comments.push({...commentText,user:findUser?.displayName,userId:findUser?.id,photoURL:findUser?.photoURL}); // Update the comments array directly
         // console.log("🚀 ~ file: Mid.jsx:137 ~ handleComment ~ updatedPost:", updatedPost)
         await updateDoc(selectedUser, { posts: currentPosts }); // Update the posts field      
       setCommentText({
@@ -418,13 +419,13 @@ function Mid() {
           <ul className="postComments">
               {item?.comments?.map((it,i) => (
                 <li key={i}>
-                  <span><h6><a><img src={user?.photoURL === null ? avatar : user?.photoURL} alt="" /></a>{it.user}</h6>{it?.userId === findUser?.id &&  <BsFillTrashFill onClick={() => handleDeleteComment(i,index)}/>}</span>
+                  <span><h6><a><img src={it?.photoURL === null ? avatar : it?.photoURL} alt="" /></a>{it.user}</h6>{it?.userId === findUser?.id &&  <BsFillTrashFill onClick={() => handleDeleteComment(i,index)}/>}</span>
                   <h4>{it.text}</h4>
                 </li>
               ))}
           </ul>
           )}
-         
+         {/* src={(filterFriends.find(ix => ix.id === it.userId)?.photoURL) || (user?.photoURL === null ? avatar : user?.photoURL)} */}
         </div>
       ))}
       </FlipMove>
@@ -460,7 +461,7 @@ function Mid() {
               <ul className="postComments">
                   {item?.comments.map((it,i) => (
                     <li key={i}>
-                      <span><h6><a><img src={singleFriend?.photoURL === null ? avatar : singleFriend?.photoURL} alt="" /></a>{it.user}</h6>{it?.userId === findUser?.id &&  <BsFillTrashFill onClick={() => handleDeleteCommentThem(i,index,singleFriend)}/>}</span>
+                      <span><h6><a><img src={it?.photoURL === null ? avatar : it?.photoURL} alt="" /></a>{it.user}</h6>{it?.userId === findUser?.id &&  <BsFillTrashFill onClick={() => handleDeleteCommentThem(i,index,singleFriend)}/>}</span>
                       <h4>{it.text}</h4>
                     </li>
                   ))}
@@ -470,7 +471,7 @@ function Mid() {
             </div>
             ))
           ))}
-
+{/* src={(singleFriend?.photoURL === null ? avatar : singleFriend?.photoURL) || (it?.userId === findUser?.id && findUser?.photoURL)} */}
       </div>
      
     </div>

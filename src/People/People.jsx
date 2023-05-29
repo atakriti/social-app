@@ -105,7 +105,7 @@ function People() {
           style={switchMedia === 1 ? { backgroundColor: "gray" } : {}}
           onClick={() => setSwitchMedia(1)}
         >
-          People
+          All
         </button>
         <button
           style={switchMedia === 2 ? { backgroundColor: "gray" } : {}}
@@ -118,10 +118,10 @@ function People() {
         {switchMedia === 2 && findUser.friends.length === 0 && (
           <h1>There are no friends yet</h1>
         )}
-
+{/* style={findUser.friends.some((ite) => ite === item.id) ? {display:"none"} : {}} */}
         {switchMedia === 1 &&
-          users?.filter((item) => item.id !== findUser?.id).map((item, i) => (
-              <div key={i} className="singlePeople">
+          users?.filter((item) => item.id !== findUser?.id).map((item, i) =>(
+              <div key={i} className="singlePeople" >
                 <a>
                   <img
                     src={item?.photoURL === null ? avatar : item?.photoURL}
@@ -158,6 +158,22 @@ function People() {
                  
                 )}
               </div>
+            ))}
+
+            {/* ===================== */}
+            {switchMedia === 2 && users?.filter(item => item?.id !== findUser?.id).map((item,i) => (
+              findUser.friends.some(ite => ite === item?.id) && (
+                <div className="singlePeople">
+                     <a>
+                  <img
+                    src={item?.photoURL === null ? avatar : item?.photoURL}
+                    alt=""
+                  />
+                </a>
+                <h4>{item.displayName}</h4>
+                  <button onClick={() => deleteFriend(item)}>Delete</button>
+                </div>
+              )
             ))}
       </div>
     </div>
