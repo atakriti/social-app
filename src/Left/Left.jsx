@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {BiHomeAlt} from "react-icons/bi"
 import {BsFillChatFill} from "react-icons/bs"
 import {FiUsers} from "react-icons/fi"
@@ -39,8 +39,9 @@ function Left() {
     let [selectedItem,setSelectedItem] = useState(location.pathname.replace("/",""))
     let handleClick = (item) => {
         navigate(`/${item?.title}`)
-        setSelectedItem(item.title)
+        setSelectedItem(item?.title)
     }
+
   return (
     <div className='left'>
         <ul>
