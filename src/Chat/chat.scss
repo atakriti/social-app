@@ -1,9 +1,7 @@
 .chat{
-    border: 1px red solid;
     width: 70%;
     display: flex;
     .chat-left{
-        border: 1px #1877F2 solid;
         padding: 0.5rem;
 
         display: flex;
@@ -21,7 +19,6 @@
         background-color: rgb(201, 201, 201);
     }
         .friend_chat{
-            border: 1px #1877F2 solid;
             padding: 0.5rem;
             border-radius: 20px;
             width: min(100% - 3%,20rem);
@@ -53,8 +50,9 @@
         }
     }
     .messages{
-        border: 1px red solid;
         flex: 1;
+        margin-bottom: 3.3rem;
+
         h1{
             text-align: center;
         }
@@ -62,6 +60,7 @@
             display: flex;
             justify-content:space-between;
             align-items: center;
+            padding: 0.5rem;
             h5{
                 font-size: 1.2rem;
             }
@@ -82,14 +81,17 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border: 1px blue solid;
             height: 100%;
             .messages_texts{
-                border: 2px black solid;
-                height: 95%;
-                
+                height: 50vh;
+                overflow-y: auto;
+                &::-webkit-scrollbar{
+                    width: 0.4rem;
+                }
+                &::-webkit-scrollbar-thumb{
+                    background-color: rgb(146, 146, 146);
+                }
                 .message{
-                    border: 1px red solid;
                     width: min(100% - 3%,300px);    
                     background-color: forestgreen; 
                     margin-left: auto;        
@@ -125,32 +127,32 @@
             form{
                 width: 100%;
                 display: flex;
-                border: 1px gray solid;
+                justify-content: space-between;
+                align-items: center;
                 input{
                     width: 95%;
                     padding: 0.5rem;
                     outline: none;
                     border: none;
                     font-size: 1rem;
+                    border: 1px gray solid;
+                    border-radius: 20px;
                 }
                 button{
-                    width: 10%;
+                    width: 2.5rem;
+                    height: 2.5rem;
                     outline: none;
                     border: none;
-                    font-size: 1rem;
                     background-color: #1877F2;
                     display: flex;
+                    border-radius: 50%;
                     justify-content: center;
                     align-items: center;
-                svg{
-                    fill: white;
-                    font-size: 1.5rem;
-                }
-                &:active{
                     svg{
-                        font-size: 1rem;
-                    }
+                    fill: white;
+                    font-size: 1.3rem;
                 }
+               
                 }
             }
         }
