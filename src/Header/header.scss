@@ -24,25 +24,45 @@ header {
       font-size: 1rem;
     }
   }
-  .header-right{
+  .header-right-co{
     display: flex;
     align-items: center;
-    cursor: pointer;
-    h3{
-        margin-left: 1rem;
-        font-size: 0.9rem;
+    gap: 1rem;
+    .not{
+      font-size: 1.5rem;
+      fill: red;
+      animation: notify 0.5s infinite alternate ease-in-out;
     }
-    svg{
-        font-size: 1.5rem;
-    }
-    &:hover{
+    @keyframes notify {
+      from{
+          transform: rotate(-10deg);
+      }to{
+          transform: rotate(10deg);
+
+      }
+  }
+
+    .header-right{
+      display: flex;
+      align-items: center;
+      cursor: pointer;
       h3{
-        color: #1877F2;
+          margin-left: 1rem;
+          font-size: 0.9rem;
       }
       svg{
-        color: #1877F2;
+          font-size: 1.5rem;
+      }
+      &:hover{
+        h3{
+          color: #1877F2;
+        }
+        svg{
+          color: #1877F2;
+        }
       }
     }
   }
+ 
 
 }

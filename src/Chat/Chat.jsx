@@ -37,6 +37,37 @@ function Chat() {
     combinedMessages.push(...myChat[0].messages);
   }
 // =============================================================
+const duringChatMakeTrue = async (chatUserId) => {
+
+  let loggedInUser = doc(db,"users",findUser?.id)
+  try {
+    let getDocument = await getDoc(loggedInUser)
+    let myChat = await getDocument.get("chat") || []
+    console.log("🚀 ~ file: Chat.jsx:50 ~ handleSwitchFriend ~ myChat:", myChat)
+    myChat = myChat.map((chat) => {
+      if (chat.senderId === chatUserId) {
+        chat.messages = chat.messages.map((message) => {
+          if (message.from === chatUserId) {
+            return { ...message, isRecived: true };
+          }
+          return message;
+        });
+      }
+      return chat;
+    }); 
+    await updateDoc(loggedInUser, { chat: myChat });
+  } catch (error) {
+    
+  }
+
+ 
+};
+
+// switchUsers === 2 && handleSwitchFriendAuto()
+
+
+
+
   const handleSwitchFriend = async (friend) => {
     setChatUserId(friend?.id);
     setInputValue("");
@@ -133,6 +164,7 @@ useEffect(() => {
   if (scrollRef.current) {
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
   }
+  duringChatMakeTrue(chatUserId)
 }, [combinedMessages]);
  
 
