@@ -28,6 +28,7 @@
             align-items: center;
             transition: 0.5s;
             cursor: pointer;
+            position: relative;
             a{
                 display: flex;
                 width:3rem;
@@ -46,6 +47,22 @@
                 background-color: #1877F2;
                 border: 1px white solid;
                 color: white;
+            }
+            .notify{
+                position: absolute;
+                top: -0.3rem;
+                right: -0.3rem;
+                fill: red;
+                font-size: 1.5rem;
+                animation: notify 0.5s infinite alternate ease-in-out;
+            }
+            @keyframes notify {
+                from{
+                    transform: rotate(-10deg);
+                }to{
+                    transform: rotate(10deg);
+
+                }
             }
         }
     }

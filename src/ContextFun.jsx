@@ -10,7 +10,6 @@ function ContextFun({children}) {
     let findUser = users?.find(item => item?.email === user?.email)
 
     let userCollection = collection(db, "users")
-    //! This must be done
     const fetchingUsers = async () => {
       await onSnapshot(userCollection,(snapshot) => {
         // Here iam getting the docs of the users 

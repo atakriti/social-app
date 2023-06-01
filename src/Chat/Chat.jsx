@@ -3,6 +3,7 @@ import "./chat.scss";
 import avatar from "../images/avatar.png";
 import { AiOutlineSend } from "react-icons/ai";
 import {BsTrashFill} from "react-icons/bs"
+import {MdNotifications} from "react-icons/md"
 import {RiArrowGoBackLine} from "react-icons/ri"
 import { context } from "../ContextFun";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -29,19 +30,41 @@ function Chat() {
   let displayChat = findChatWith?.chat?.filter(item => item?.senderId === findUser?.id)
   let myChat = findUser?.chat?.filter(item => item.senderId === chatUserId)
   let combinedMessages = []
-  console.log("🚀 ~ file: Chat.jsx:30 ~ Chat ~ combinedMessages:", combinedMessages)
   if (displayChat && displayChat.length > 0) {
     combinedMessages.push(...displayChat[0].messages);
   }
   if (myChat && myChat.length > 0) {
     combinedMessages.push(...myChat[0].messages);
   }
-
-
-  const handleSwitchFriend = (friend) => {
+// =============================================================
+  const handleSwitchFriend = async (friend) => {
     setChatUserId(friend?.id);
     setInputValue("");
     setSwitchUsers(2)
+    //  in my chat
+    // if chatUserid === from ? true
+    let loggedInUser = doc(db,"users",findUser?.id)
+    try {
+      let getDocument = await getDoc(loggedInUser)
+      let myChat = await getDocument.get("chat") || []
+      console.log("🚀 ~ file: Chat.jsx:50 ~ handleSwitchFriend ~ myChat:", myChat)
+      myChat = myChat.map((chat) => {
+        if (chat.senderId === friend?.id) {
+          chat.messages = chat.messages.map((message) => {
+            if (message.from === friend?.id) {
+              return { ...message, isRecived: true };
+            }
+            return message;
+          });
+        }
+        return chat;
+      }); 
+      await updateDoc(loggedInUser, { chat: myChat });
+    } catch (error) {
+      
+    }
+
+   
   };
   const handleBack = () => {
     setSwitchUsers(1)
@@ -62,14 +85,15 @@ function Chat() {
      
       if (!found) {
         // If senderId doesn't exist, create a new object
-        const newObject = { senderId: findUser.id, messages: [{from:findUser.id,to:chatUserId,text:inputValue,time:timeResult,id:combinedMessages.length + 1}] };
+        const newObject = { senderId: findUser.id, messages: [{from:findUser.id,to:chatUserId,text:inputValue,time:timeResult,id:combinedMessages.length + 1,isRecived:false}] };
         hisChat.push(newObject);
     setInputValue("");
-
+   
       } else {
         // Push the new message to the existing messages array
-        found.messages.push({from:findUser.id,to:chatUserId,text:inputValue,time:timeResult,id:combinedMessages.length + 1});
+        found.messages.push({from:findUser.id,to:chatUserId,text:inputValue,time:timeResult,id:combinedMessages.length + 1,isRecived:false});
     setInputValue("");
+  
 
       }
       updateDoc(selectedUser, { chat: hisChat });
@@ -101,12 +125,16 @@ function Chat() {
   }
 
 
-  useEffect(() => {
-    // Scroll to the last message when component mounts or combinedMessages changes
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [combinedMessages]);
+
+
+
+useEffect(() => {
+  // Scroll to the last message when component mounts or combinedMessages changes
+  if (scrollRef.current) {
+    scrollRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+}, [combinedMessages]);
+ 
 
   return (
     <div className="chat">
@@ -126,6 +154,9 @@ function Chat() {
        />
      </a>
      <h3>{friend?.displayName}</h3>
+    {users?.some(user => user?.chat?.some(cha => cha?.messages?.some(single => (single?.from === friend?.id && single?.to === findUser?.id) && single?.isRecived === false))) && (
+     <MdNotifications className="notify"/>
+    )}
    </div>
  ))}
 </div>
@@ -136,7 +167,9 @@ function Chat() {
  <div className="messages">
   <div className="back_btn_container">
   <h5>{users.find(user => user.id === chatUserId).displayName}</h5> 
+  {combinedMessages.length !== 0 && (
    <BsTrashFill className="back_btn" style={{backgroundColor:"red"}} onClick={handleDelete} title="Delete all messages" />
+  )}
    <RiArrowGoBackLine className="back_btn" onClick={handleBack} title="back" />
   </div>
  {chatUserId === null ? (
@@ -145,7 +178,7 @@ function Chat() {
      <div className="messages_container">
      <div className="messages_texts">
        {combinedMessages?.sort((a, b) => a.id - b.id).map((message,i) => (
-        <div className={message.from === findUser.id ? "message" : "message messageOther"}>
+        <div key={i} className={message.from === findUser.id ? "message" : "message messageOther"}>
           <h4>{message.text}</h4>
           <h6>{message.time}</h6>
         </div>
