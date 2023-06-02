@@ -146,7 +146,7 @@ function People() {
                         </div>
                     ) : (
                       findUser.friends.some((ite) => ite === item.id) ? (
-                        <button onClick={() => deleteFriend(item)}>Delete</button>
+                        <button onClick={() => deleteFriend(item)}>Unfriend</button>
                       ) : (
                         <button onClick={() => handleAddFriend(item)}>
                         <RiUserAddFill />
@@ -171,7 +171,7 @@ function People() {
                   />
                 </a>
                 <h4>{item.displayName}</h4>
-                  <button onClick={() => deleteFriend(item)}>Delete</button>
+                  <button onClick={() => deleteFriend(item)}>Unfriend</button>
                 </div>
               )
             ))}

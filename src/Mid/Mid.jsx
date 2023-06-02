@@ -16,6 +16,15 @@ import { v4 } from 'uuid';
 import avatar from "../images/avatar.png" 
 
 function Mid() {
+    // =================================
+    let dateObj = new Date();
+    let month = dateObj.getUTCMonth() + 1; //months from 1-12
+    let day = dateObj.getUTCDate();
+    let year = dateObj.getUTCFullYear();
+    let FullDate = year + "/" + month + "/" + day
+    let FullTime = new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes() + ":" + new Date(Date.now()).getSeconds()
+  let timeResult = FullDate + "–" + FullTime
+   // ============================
   const {findUser,user,users} = useContext(context)
 // ===================================================
   let filterFriends = users?.filter(user => findUser?.friends?.some(item => item === user.id))
@@ -90,13 +99,13 @@ function Mid() {
         if(filePostValue !== null ){
           uploadBytes(uploadFile,filePostValue).then((snapshot) => {
             getDownloadURL(snapshot.ref).then(url => {
-              updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url,likes:0,comments:[],likesBy:[]}]})
+              updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url,likes:0,comments:[],likesBy:[],timestamp:timeResult}]})
               setTextPostValue("")
               setFilePostValue(null)
             })
           })
         }else{
-          updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null,likes:0,comments:[],likesBy:[]}]})
+          updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null,likes:0,comments:[],likesBy:[],timestamp:timeResult}]})
           setTextPostValue("")
         }
        
@@ -388,9 +397,12 @@ function Mid() {
       {/* ================================================ POSTS ========================== */}
       <div className="posts">
         <FlipMove>
-      {findUser?.posts?.map((item,index) => (
+      {findUser?.posts?.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))?.reverse()?.map((item,index) => (
         <div key={index} className="singlePost">
-          <h2><a><img src={user?.photoURL === null ? avatar : user?.photoURL} alt="" /></a>{item.text}</h2>
+          <div className="post_top">
+            <h2><a><img src={user?.photoURL === null ? avatar : user?.photoURL} alt="" /></a>{item.text}</h2>
+          <h4>{item?.timestamp}</h4>
+          </div>
           {item?.file?.includes("image") &&  (
             <a onClick={()=>handleClickStory(item.file)} ><img src={item.file} alt="" /></a>
           )}
@@ -408,7 +420,6 @@ function Mid() {
           <h3>Likes {item.likes}</h3>
           <div className="post-btns">
             <AiFillLike onClick={() => handleLike(index)} style={item.likesBy.some(ite => ite === findUser?.id) && {fill:"#1877F2"}} />
-            <BsShareFill/>
             <BsFillTrashFill onClick={() => handleDeletePost(index,item.file)}/>
           </div>
           <form className="commentsForm" onSubmit={(e) => handleComment(e,index)} >
@@ -434,7 +445,10 @@ function Mid() {
 {filterFriends?.map((singleFriend) => (
             singleFriend?.posts?.map((item,index) => (
               <div key={index} className="singlePost">
-              <h2><a><img src={singleFriend?.photoURL === null ? avatar : singleFriend?.photoURL} alt="" /></a>{item.text}</h2>
+              <div className="post_top">
+                <h2><a><img src={singleFriend?.photoURL === null ? avatar : singleFriend?.photoURL} alt="" /></a>{item.text}</h2>
+                <h4>{item?.timestamp}</h4>
+              </div>
               {item?.file?.includes("image") &&  (
                 <a onClick={()=>handleClickStory(item.file)} ><img src={item.file} alt="" /></a>
               )}

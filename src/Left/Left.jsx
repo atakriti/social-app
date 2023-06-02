@@ -27,14 +27,14 @@ function Left() {
             title:"media",
             logo: MdPermMedia
         },
-        {
-            title:"profile",
-            logo: CgProfile
-        },
-        {
-            title:"settings",
-            logo: AiFillSetting
-        }
+        // {
+        //     title:"profile",
+        //     logo: CgProfile
+        // },
+        // {
+        //     title:"settings",
+        //     logo: AiFillSetting
+        // }
     ]
     let [selectedItem,setSelectedItem] = useState(location.pathname.replace("/",""))
     let handleClick = (item) => {
