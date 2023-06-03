@@ -11,7 +11,7 @@ import Media from "./Media/Media";
 import Chat from "./Chat/Chat";
 function App() {
   let location = useLocation();
-  let {isLoading} = useContext(context)
+  let {isLoading,user} = useContext(context)
 
   return (
     <div className="home">
@@ -28,10 +28,15 @@ function App() {
 
         <Routes>
           <Route exact path="/" element={<Register />} />
-          <Route path="/home" element={<Home />} />
+          {user && (
+            <>
+            <Route path="/home" element={<Home />} />
           <Route path="/people" element={<People />} />
           <Route path="/media" element={<Media />} />
           <Route path="/chat" element={<Chat />} />
+            </>
+          )}
+          
         </Routes>
       </div>
     </div>
