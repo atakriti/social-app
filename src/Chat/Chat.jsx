@@ -219,6 +219,7 @@ useEffect(() => {
      </div>
      <form onChange={handleChange} onSubmit={handleSubmit}>
        <input
+       required
          type="text"
          name="text"
          value={inputValue}
