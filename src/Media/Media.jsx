@@ -7,7 +7,7 @@ import { deleteObject, ref } from "firebase/storage";
 import { db, storage } from "../firebase";
 function Media() {
   const [switchMedia, setSwitchMedia] = useState(1);
-  const { findUser } = useContext(context);
+  const { findUser,setIsLoading } = useContext(context);
   let [viewStory, setViewStory] = useState(false);
   let [selectedStory, setSelectedStory] = useState();
   let handleClickStory = (story) => {
@@ -18,6 +18,7 @@ function Media() {
   const handleDeletePost = async (file,index) => {
     let loggedInUser = doc(db,"users",findUser?.id)
     try {
+      setIsLoading(true)
       let getDocument = await getDoc(loggedInUser)
       let currentPosts = await getDocument.get("posts") || []
       let fileRef = ref(storage,file)
@@ -25,18 +26,24 @@ function Media() {
       if(file){
         await deleteObject(fileRef).then(() => {
           updateDoc(loggedInUser,{posts:filterDelete}) 
+      setIsLoading(false)
+
         })
       }
      
       
     } catch (error) {
    alert(error.message)
+   setIsLoading(false)
+
     }
   }
 
   const handleDeleteStory = async (file,index) => {
     let loggedInUser = doc(db,"users",findUser?.id)
     try {
+      setIsLoading(true)
+
       let getDocument = await getDoc(loggedInUser)
       let currentPosts = await getDocument.get("stories") || []
       let fileRef = ref(storage,file)
@@ -44,12 +51,16 @@ function Media() {
       if(file){
         await deleteObject(fileRef).then(() => {
           updateDoc(loggedInUser,{stories:filterDelete}) 
+      setIsLoading(false)
+
         })
       }
      
       
     } catch (error) {
    alert(error.message)
+   setIsLoading(false)
+
     }
   }
 

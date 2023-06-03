@@ -15,7 +15,7 @@ import {ref,uploadBytes,listAll, getDownloadURL,deleteObject} from "firebase/sto
 
 // ======================= Firebase ends =======================
 const CameraComponent = ({setIsStory,isStory}) => {
-  let {findUser,user,setLoading} = useContext(context)
+  let {findUser,user,setLoading,setIsLoading} = useContext(context)
 
   const [photoDataUri, setPhotoDataUri] = useState(null);
   const [mediaStream, setMediaStream] = useState(null);
@@ -124,6 +124,7 @@ const CameraComponent = ({setIsStory,isStory}) => {
     // ================ Firebase ===============
     let loggedInUser = doc(db,"users",findUser?.id)
     try {
+      setIsLoading(true)
       let getDocument = await getDoc(loggedInUser)
       let currentStories = await getDocument.get("stories") || []
       
@@ -133,10 +134,13 @@ const CameraComponent = ({setIsStory,isStory}) => {
         getDownloadURL(snapshot.ref).then((ur) => {
            updateDoc(loggedInUser,{stories:[...currentStories,ur]})
            setRecordedChunks([])
+           setIsLoading(false)
         })
       })
     } catch (error) {
       alert(error.message.split("/")[1].replace(")", ""))
+      setIsLoading(false)
+
     }
     // ================ Firebase Ends ===============
 

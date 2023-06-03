@@ -25,7 +25,7 @@ function Mid() {
     let FullTime = new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes() + ":" + new Date(Date.now()).getSeconds()
   let timeResult = FullDate + "–" + FullTime
    // ============================
-  const {findUser,user,users} = useContext(context)
+  const {findUser,user,users,setIsLoading} = useContext(context)
 // ===================================================
   let filterFriends = users?.filter(user => findUser?.friends?.some(item => item === user.id))
   console.log("🚀 ~ file: Mid.jsx:22 ~ Mid ~ filterFriends:", filterFriends)
@@ -56,6 +56,7 @@ function Mid() {
     e.preventDefault()
     let loggedInUser = doc(db,"users",findUser?.id)
     try { 
+      setIsLoading(true)
       let getDocument = await getDoc(loggedInUser)
       let currentStories = await getDocument.get("stories") || []
       let uploadFile = ref(storage,`files/${uploadDeviceValue?.type?.split("/")[0]+ v4()}`)
@@ -65,12 +66,14 @@ function Mid() {
           setIsOpenStory(false)
     setAskUpload(false)
     setUploadDeviceValue(null)
+    setIsLoading(false)
 
         })
       })
       
     } catch (error) {
    alert(error.message.split("/")[1].replace(")", ""))
+    setIsLoading(false)
       
     }
 
@@ -92,6 +95,8 @@ function Mid() {
     e.preventDefault()
     let loggedInUser = doc(db,"users",findUser?.id)
     try {
+    setIsLoading(true)
+
         let getDocument = await getDoc(loggedInUser)
         let currentPosts = await getDocument.get("posts") || []
         let uploadFile = ref(storage,`files/${filePostValue?.type?.split("/")[0] + v4()}`)
@@ -102,15 +107,21 @@ function Mid() {
               updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url,likes:0,comments:[],likesBy:[],timestamp:timeResult}]})
               setTextPostValue("")
               setFilePostValue(null)
+    setIsLoading(false)
+
             })
           })
         }else{
           updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null,likes:0,comments:[],likesBy:[],timestamp:timeResult}]})
           setTextPostValue("")
+    setIsLoading(false)
+
         }
        
     } catch (error) {
    alert(error.message.split("/")[1].replace(")", ""))
+   setIsLoading(false)
+
     }
 
   }
@@ -118,6 +129,8 @@ function Mid() {
   let handleDeletePost = async (index,file) => {
     let loggedInUser = doc(db,"users",findUser?.id)
     try {
+    setIsLoading(false)
+
       let getDocument = await getDoc(loggedInUser)
       let currentPosts = await getDocument.get("posts") || []
       let fileRef = ref(storage,file)
@@ -125,14 +138,20 @@ function Mid() {
       if(file){
         await deleteObject(fileRef).then(() => {
           updateDoc(loggedInUser,{posts:filterDelete}) 
+    setIsLoading(false)
+
         })
       }else{
         updateDoc(loggedInUser,{posts:filterDelete}) 
+    setIsLoading(false)
+
       }
      
       
     } catch (error) {
    alert(error.message.split("/")[1].replace(")", ""))
+   setIsLoading(false)
+
     }
   }
   // =================== Comment Post ===========
@@ -146,13 +165,17 @@ function Mid() {
     e.preventDefault()
     let loggedInUser = doc(db,"users",findUser?.id)
     try {
+    setIsLoading(true)
+
       let getDocument = await getDoc(loggedInUser)
       let currentPosts = await getDocument.get("posts") || []
       let findCurrentPost = currentPosts?.find((item,i) => i === index)
       // let updatedPost = {...findCurrentPost,comments:[...findCurrentPost.comments,commentText]}
       findCurrentPost.comments.push({...commentText,user:findUser?.displayName,userId:findUser?.id,photoURL:findUser?.photoURL}); // Update the comments array directly
         // console.log("🚀 ~ file: Mid.jsx:137 ~ handleComment ~ updatedPost:", updatedPost)
-        await updateDoc(loggedInUser, { posts: currentPosts }); // Update the posts field      
+        await updateDoc(loggedInUser, { posts: currentPosts }); // Update the posts field     
+    setIsLoading(false)
+
       setCommentText({
         text:"",
         index:null,
@@ -161,6 +184,8 @@ function Mid() {
       })
     } catch (error) {
    alert(error.message.split("/")[1].replace(")", ""))
+   setIsLoading(false)
+
     }
 
   }
@@ -170,13 +195,17 @@ function Mid() {
 
 
     try {
+    setIsLoading(true)
+
       let getDocument = await getDoc(selectedUser)
       let currentPosts = await getDocument.get("posts") || []
       let findCurrentPost = currentPosts?.find((item,i) => i === index)
       // let updatedPost = {...findCurrentPost,comments:[...findCurrentPost.comments,commentText]}
       findCurrentPost.comments.push({...commentText,user:findUser?.displayName,userId:findUser?.id,photoURL:findUser?.photoURL}); // Update the comments array directly
         // console.log("🚀 ~ file: Mid.jsx:137 ~ handleComment ~ updatedPost:", updatedPost)
-        await updateDoc(selectedUser, { posts: currentPosts }); // Update the posts field      
+        await updateDoc(selectedUser, { posts: currentPosts }); // Update the posts field 
+   setIsLoading(false)
+
       setCommentText({
         text:"",
         index:null,
@@ -185,6 +214,8 @@ function Mid() {
       })
     } catch (error) {
    alert(error.message.split("/")[1].replace(")", ""))
+   setIsLoading(false)
+
     }
 
   }
@@ -193,6 +224,8 @@ function Mid() {
     // index is the index of the post when mapping
     // i is the index of the comment when mapping the comments inside the post
     try {
+    setIsLoading(true)
+
       let loggedInUser = doc(db,"users",findUser?.id)
         let getDocument = await getDoc(loggedInUser)
         let currentPosts = await getDocument.get("posts") || []
@@ -203,9 +236,11 @@ function Mid() {
           findCurrentPost.comments = updated
         // This ↓ can effect the original one
         await updateDoc(loggedInUser,{posts:currentPosts})
+    setIsLoading(false)
       
     } catch (error) {
    alert(error.message)
+    setIsLoading(false)
       
     }
   }
@@ -213,6 +248,8 @@ function Mid() {
     // index is the index of the post when mapping
     // i is the index of the comment when mapping the comments inside the post
     try {
+    setIsLoading(true)
+
       let selectedUser = doc(db,"users",selUser?.id)
         let getDocument = await getDoc(selectedUser)
         let currentPosts = await getDocument.get("posts") || []
@@ -223,9 +260,11 @@ function Mid() {
           findCurrentPost.comments = updated
         // This ↓ can effect the original one
         await updateDoc(selectedUser,{posts:currentPosts})
+    setIsLoading(false)
       
     } catch (error) {
    alert(error.message)
+    setIsLoading(false)
       
     }
   }

@@ -11,7 +11,7 @@ import {addDoc,collection} from "firebase/firestore"
 import {createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,signInWithPopup,updateProfile,onAuthStateChanged} from "firebase/auth"
 import { context } from "../ContextFun";
 function Register() {
-  const {users} = useContext(context)
+  const {users,setIsLoading} = useContext(context)
   let userCollection = collection(db,"users")
   const navigate = useNavigate();
   const [switchForms, setSwitchForms] = useState(1);
@@ -27,7 +27,10 @@ function Register() {
   const handleSubmitSignin = async (e) => {
     e.preventDefault();
     try {
+      setIsLoading(true)
       await signInWithEmailAndPassword(auth,siValue.siEmail,siValue.siPassword).then(() => navigate("/home"))
+      setIsLoading(false)
+
       setSiValue({
         siEmail: "",
         siPassword: "",
@@ -35,11 +38,14 @@ function Register() {
       
     } catch (error) {
       alert(error.message.split("/")[1].replace(")", ""))
+      setIsLoading(false)
+
     }
   };
   const handleSubmitSignup = async (e) => {
     e.preventDefault();
     try {
+      setIsLoading(true)
       const {user} = await createUserWithEmailAndPassword(auth,suValue.suEmail,suValue.suPassword)
       await updateProfile(user,{displayName:suValue.displayName})
       await addDoc(userCollection,{
@@ -52,6 +58,7 @@ function Register() {
         friendsRequests:[],
         photoURL:user.photoURL
       }).then(() => navigate("/home") )
+      setIsLoading(false)
       setSuValue({
         displayName: "",
         suEmail: "",
@@ -60,6 +67,7 @@ function Register() {
         
     } catch (error) {
       alert(error.message.split("/")[1].replace(")", ""))
+      setIsLoading(false)
     }
   };
   // ======================

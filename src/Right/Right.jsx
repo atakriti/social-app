@@ -6,7 +6,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 function Right() {
-  let {findUser,users} = useContext(context)
+  let {findUser,users,setIsLoading} = useContext(context)
   let filterd = []
 //  Here i am getting the people compared between users and my friendsReq
   for(let i = 0; i < users?.length; i++){
@@ -27,6 +27,7 @@ function Right() {
     let loggedInUser = doc(db,"users",findUser?.id)
     let selectedUser = doc(db,"users",item?.id)
     try {
+      setIsLoading(true)
       let getMyDocument = await getDoc(loggedInUser)
       let getHisDocument = await getDoc(selectedUser)
       let myFriendsReqArray = await getMyDocument.get("friendsRequests") || []
@@ -40,30 +41,35 @@ function Right() {
       }else{
         myFriendsArray.push(item?.id)
         updateDoc(loggedInUser,{friendsRequests:filterd,friends:myFriendsArray})
+        setIsLoading(false)
       }
       if(hisFriendsArray.some(ite => ite?.id === findUser?.id)){
         return;
       }else{
         hisFriendsArray.push(findUser?.id)
         updateDoc(selectedUser,{friends:hisFriendsArray})
+        setIsLoading(false)
       }
 
 
     } catch (error) {
       alert(error.message)
+      setIsLoading(false)
     }
   }
   
   const handleReject = async (item) => {
     let loggedInUser = doc(db,"users",findUser?.id)
     try {
+      setIsLoading(true)
       let getMyDocument = await getDoc(loggedInUser)
       let myFriendsArray = await getMyDocument.get("friendsRequests") || []
       let filterMine = myFriendsArray.filter(ite => ite !== item?.id)
       updateDoc(loggedInUser,{friendsRequests:filterMine})
-     
+      setIsLoading(false)
     } catch (error) {
       alert(error.message)
+      setIsLoading(false)
     }
   }
 

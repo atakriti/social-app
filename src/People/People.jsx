@@ -7,28 +7,33 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getDatabase, ref, onValue, off } from "firebase/database";
 import { db } from "../firebase";
 function People() {
-  let { users, findUser } = useContext(context);
+  let { users, findUser,setIsLoading } = useContext(context);
   const [switchMedia, setSwitchMedia] = useState(1);
 
   const handleAddFriend = async (item) => {
     let loggedInUser = doc(db, "users", findUser?.id);
     let selectedUser = doc(db, "users", item?.id);
     try {
+      setIsLoading(true)
       let getMyDocument = await getDoc(loggedInUser);
       let getHisDocument = await getDoc(selectedUser);
       // To get the full document say .data()
       // getHisDocument.data()
-      let hisFriendsRequests =
-        (await getHisDocument.get("friendsRequests")) || [];
+      let hisFriendsRequests = (await getHisDocument.get("friendsRequests")) || [];
       if (hisFriendsRequests.some((it) => it === findUser?.id)) {
+
         return;
       } else {
         // pushed my id to him
         hisFriendsRequests.push(findUser?.id);
         updateDoc(selectedUser, { friendsRequests: hisFriendsRequests });
+      setIsLoading(false)
+
       }
     } catch (error) {
       alert(error.message);
+      setIsLoading(false)
+
     }
   };
 
@@ -38,6 +43,8 @@ function People() {
     let loggedInUser = doc(db,"users",findUser?.id)
     let selectedUser = doc(db,"users",item?.id)
     try {
+      setIsLoading(true)
+
       let getMyDocument = await getDoc(loggedInUser)
       let getHisDocument = await getDoc(selectedUser)
       let myFriendsReqArray = await getMyDocument.get("friendsRequests") || []
@@ -48,33 +55,47 @@ function People() {
 
       if(myFriendsArray.some(ite => ite?.id === item?.id)){
         return;
+
       }else{
         myFriendsArray.push(item?.id)
         updateDoc(loggedInUser,{friendsRequests:filterd,friends:myFriendsArray})
+      setIsLoading(false)
+
+      setIsLoading(false)
+
       }
       if(hisFriendsArray.some(ite => ite?.id === findUser?.id)){
         return;
       }else{
         hisFriendsArray.push(findUser?.id)
         updateDoc(selectedUser,{friends:hisFriendsArray})
+      setIsLoading(false)
+
       }
 
 
     } catch (error) {
       alert(error.message)
+      setIsLoading(false)
+
     }
   }
 
   const handleReject = async (item) => {
     let loggedInUser = doc(db,"users",findUser?.id)
     try {
+      setIsLoading(true)
+
       let getMyDocument = await getDoc(loggedInUser)
       let myFriendsArray = await getMyDocument.get("friendsRequests") || []
       let filterMine = myFriendsArray.filter(ite => ite !== item?.id)
       updateDoc(loggedInUser,{friendsRequests:filterMine})
+      setIsLoading(false)
      
     } catch (error) {
       alert(error.message)
+      setIsLoading(false)
+
     }
   }
 
@@ -85,6 +106,8 @@ function People() {
     let loggedInUser = doc(db,"users",findUser?.id)
     let selectedUser = doc(db,"users",item?.id)
     try {
+      setIsLoading(true)
+
       let getMyDocument = await getDoc(loggedInUser)
       let myFriendsArray = await getMyDocument.get("friends") || []
       let getHisDocument = await getDoc(selectedUser)
@@ -93,8 +116,12 @@ function People() {
       updateDoc(loggedInUser,{friends:filterMine})
       let filterHim = hisFriendsArray.filter(ite => ite !== findUser?.id)
       updateDoc(selectedUser,{friends:filterHim})
+      setIsLoading(false)
+
     } catch (error) {
       alert(error.message)
+      setIsLoading(false)
+
     }
   }
 

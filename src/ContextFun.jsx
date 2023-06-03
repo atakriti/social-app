@@ -16,14 +16,14 @@ function ContextFun({children}) {
         setUsers(snapshot.docs.map(doc => ({...doc.data(),id:doc.id})))
       })
     }
-
+    let [isLoading,setIsLoading] = useState(false)
     useEffect(() => {
       onAuthStateChanged(auth,(current) => setUser(current))
       fetchingUsers()
     },[])
   // =================== Values ===============
   const values = {
-    user,setUser,users, setUsers,findUser
+    user,setUser,users, setUsers,findUser,isLoading,setIsLoading
   }
   return (
     <context.Provider value={values} >{children}</context.Provider>

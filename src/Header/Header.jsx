@@ -16,9 +16,11 @@ import { BsFillChatFill } from 'react-icons/bs'
 function Header() {
   const breakpoint = useMediaQuery('(max-width: 900px)');
   let navigate = useNavigate()
-  const {user,findUser} = useContext(context)
+  const {user,findUser,setIsLoading} = useContext(context)
   const signout = async () => {
+    setIsLoading(true)
     await signOut(auth).then(() => navigate("/"))
+    setIsLoading(false)
   }
 
     let location = useLocation();

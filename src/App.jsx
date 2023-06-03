@@ -11,9 +11,16 @@ import Media from "./Media/Media";
 import Chat from "./Chat/Chat";
 function App() {
   let location = useLocation();
+  let {isLoading} = useContext(context)
 
   return (
     <div className="home">
+      {isLoading && (
+ <div className="loading">
+ <span class="loader"></span>
+ </div>
+      )}
+     
       {/* Render it everywhere except root */}
       {location.pathname !== "/" && <Header />}
       <div className="home-container">
