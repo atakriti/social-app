@@ -46,6 +46,7 @@ const CameraComponent = ({setIsStory,isStory}) => {
  // == Firebase ====
  let loggedInUser = doc(db,"users",findUser?.id)
  try {
+  setIsLoading(true)
    let getDocument = await getDoc(loggedInUser)
    let currentStories = await getDocument.get("stories") || []
    
@@ -57,10 +58,12 @@ const CameraComponent = ({setIsStory,isStory}) => {
      getDownloadURL(snapshot.ref).then((ur) => {
         updateDoc(loggedInUser,{stories:[...currentStories,ur]})
         setIsPicTaken(false)
+        setIsLoading(false)
      })
    })
  } catch (error) {
    alert(error.message.split("/")[1].replace(")", ""))
+   setIsLoading(false)
  }
  // ================ Firebase Ends ===============
   }
