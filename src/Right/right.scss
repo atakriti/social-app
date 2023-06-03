@@ -4,6 +4,9 @@
     height: 90vh;
     overflow-y: auto;
     // width: 15rem;
+    @media only screen and (max-width:900px) {
+        display: none;
+      }
     &::-webkit-scrollbar{
         width: 0.5rem;
     }

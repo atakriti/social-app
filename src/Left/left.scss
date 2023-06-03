@@ -5,6 +5,9 @@
   // padding: 1rem;
   // padding-right: 4rem;
   width: 20%;
+  @media only screen and (max-width:900px) {
+    display: none;
+  }
   ul {
     // border: 1px red solid;
     padding: 1rem;

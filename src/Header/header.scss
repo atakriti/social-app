@@ -1,9 +1,14 @@
-header {
+.header{
+  header {
     margin-bottom: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
+    @media only screen and (max-width:900px) {
+      width: 100%;
+      padding: 1rem 0.3rem;
+    }
   .logo {
     width: fit-content;
     display: flex;
@@ -32,6 +37,7 @@ header {
       font-size: 1.5rem;
       fill: red;
       animation: notify 0.5s infinite alternate ease-in-out;
+      cursor: pointer;
     }
     @keyframes notify {
       from{
@@ -41,6 +47,7 @@ header {
 
       }
   }
+
 
     .header-right{
       display: flex;
@@ -64,5 +71,32 @@ header {
     }
   }
  
+
+}
+
+
+nav{
+ background-color: white;
+  .navcontainer{
+    width: min(100% - 3%,300px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0.5rem;
+    .list_{
+      list-style: none;
+      svg{
+        font-size: 1.5rem;
+      }
+    }
+    .listEffect_{
+      svg{
+        fill: #1877F2;
+      }
+    }
+  }
+ 
+}
 
 }

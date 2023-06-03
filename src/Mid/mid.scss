@@ -5,6 +5,10 @@
   background-color: white;
   border-radius: 10px;
   box-shadow: 3px 3px 5px rgb(207, 207, 207);
+  @media only screen and (max-width:900px) {
+    border-radius: 0;
+    box-shadow: none;
+  }
   // ===================== Ask local or camera =========
   .openStory{
     position: fixed;
@@ -117,9 +121,12 @@
   .mid-stories {
     display: flex;
     overflow-x: scroll;
-    width: 56vw;
+    max-width:56vw;
     gap: 2rem;
     padding-bottom: 1rem;
+    @media only screen and (max-width:900px) {
+      max-width: 95vw;
+    }
     &::-webkit-scrollbar {
       height: 0.3vw;
     }
@@ -256,7 +263,7 @@
       justify-content: space-between;
       // flex-wrap: wrap;
       align-items: center;
-      @media only screen and (max-width:1000px) {
+      @media only screen and (max-width:600px) {
         flex-wrap: wrap;
         justify-content: start;
         .post-form-btns{

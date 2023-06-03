@@ -3,8 +3,7 @@ import {BiHomeAlt} from "react-icons/bi"
 import {BsFillChatFill} from "react-icons/bs"
 import {FiUsers} from "react-icons/fi"
 import {MdPermMedia} from "react-icons/md"
-import {CgProfile} from "react-icons/cg"
-import {AiFillSetting} from "react-icons/ai"
+
 import "./left.scss"
 import { useLocation, useNavigate,useParams } from 'react-router-dom'
 function Left() {
@@ -27,14 +26,6 @@ function Left() {
             title:"media",
             logo: MdPermMedia
         },
-        // {
-        //     title:"profile",
-        //     logo: CgProfile
-        // },
-        // {
-        //     title:"settings",
-        //     logo: AiFillSetting
-        // }
     ]
     let [selectedItem,setSelectedItem] = useState(location.pathname.replace("/",""))
     let handleClick = (item) => {

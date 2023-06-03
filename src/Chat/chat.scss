@@ -1,6 +1,17 @@
 .chat{
     width: 70%;
     display: flex;
+    @media only screen and (max-width:900px) {
+        width: 100%;
+        
+        .messages{
+            .messages_container{
+                .messages_texts{
+                    height: 65vh !important;
+                }
+            }
+        }
+      }
     .chat-left{
         padding: 0.5rem;
 
