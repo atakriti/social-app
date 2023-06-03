@@ -46,6 +46,13 @@ function Mid() {
     user:"",
     userId:""
   })
+   const [commentTextThem,setCommentTextThem] = useState({
+    text:"",
+    idx:null,
+    user:"",
+    userId:""
+  })
+
 
   let handleClickStory = (story) => {
     setSelectedStory(story)
@@ -189,6 +196,13 @@ function Mid() {
     }
 
   }
+
+  let handleChangeCommentThem = (e,index) => {
+    setCommentTextThem({...commentTextThem,idx:index})
+    setCommentTextThem(prev => index === prev.idx ? {...prev,text:e.target.value} : prev)
+  }
+
+
   let handleCommentThem = async (e,index,selUser) => {
     e.preventDefault()
     let selectedUser = doc(db,"users",selUser?.id)
@@ -201,12 +215,12 @@ function Mid() {
       let currentPosts = await getDocument.get("posts") || []
       let findCurrentPost = currentPosts?.find((item,i) => i === index)
       // let updatedPost = {...findCurrentPost,comments:[...findCurrentPost.comments,commentText]}
-      findCurrentPost.comments.push({...commentText,user:findUser?.displayName,userId:findUser?.id,photoURL:findUser?.photoURL}); // Update the comments array directly
+      findCurrentPost.comments.push({...commentTextThem,user:findUser?.displayName,userId:findUser?.id,photoURL:findUser?.photoURL}); // Update the comments array directly
         // console.log("🚀 ~ file: Mid.jsx:137 ~ handleComment ~ updatedPost:", updatedPost)
         await updateDoc(selectedUser, { posts: currentPosts }); // Update the posts field 
    setIsLoading(false)
 
-      setCommentText({
+   setCommentTextThem({
         text:"",
         index:null,
         user:"",
@@ -436,7 +450,7 @@ function Mid() {
       {/* ================================================ POSTS ========================== */}
       <div className="posts">
         <FlipMove>
-      {findUser?.posts?.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))?.reverse()?.map((item,index) => (
+      {findUser?.posts?.map((item,index) => (
         <div key={index} className="singlePost">
           <div className="post_top">
             <h2><a><img src={user?.photoURL === null ? avatar : user?.photoURL} alt="" /></a>{item.text}</h2>
@@ -462,7 +476,7 @@ function Mid() {
             <BsFillTrashFill onClick={() => handleDeletePost(index,item.file)}/>
           </div>
           <form className="commentsForm" onSubmit={(e) => handleComment(e,index)} >
-            <input required type="text" name="commentText" placeholder="Type your comment..." value={commentText.idx === index ? commentText.text : ""} onChange={(e) => handleChangeComment(e,index)}/>
+            <input required type="text" name="text" placeholder="Type your comment..." value={commentText.idx === index ? commentText.text : ""} onChange={(e) => handleChangeComment(e,index)}/>
             <button><BsSendFill/></button>
           </form>
           {item?.comments?.length > 0 && (
@@ -507,7 +521,7 @@ function Mid() {
                 <AiFillLike onClick={() => handleLikeThem(index,singleFriend)} style={item.likesBy.some(ite => ite === findUser?.id) && {fill:"#1877F2"}} />
               </div>
               <form className="commentsForm" onSubmit={(e) => handleCommentThem(e,index,singleFriend)} >
-                <input required type="text" name="commentText" placeholder="Type your comment..." value={commentText.idx === index ? commentText.text : ""} onChange={(e) => handleChangeComment(e,index)}/>
+                <input required type="text" name="text" placeholder="Type your comment..." value={commentTextThem.idx === index ? commentTextThem.text : ""} onChange={(e) => handleChangeCommentThem(e,index)}/>
                 <button><BsSendFill/></button>
               </form>
               {item?.comments?.length > 0 && (
