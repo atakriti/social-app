@@ -111,7 +111,7 @@ function Mid() {
         if(filePostValue !== null ){
           uploadBytes(uploadFile,filePostValue).then((snapshot) => {
             getDownloadURL(snapshot.ref).then(url => {
-              updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url,likes:0,comments:[],likesBy:[],timestamp:timeResult}]})
+              updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:url,likes:0,comments:[],likesBy:[],timestamp:timeResult,postBy:findUser?.displayName}]})
               setTextPostValue("")
               setFilePostValue(null)
     setIsLoading(false)
@@ -119,7 +119,7 @@ function Mid() {
             })
           })
         }else{
-          updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null,likes:0,comments:[],likesBy:[],timestamp:timeResult}]})
+          updateDoc(loggedInUser,{posts:[...currentPosts,{text:textPostValue,file:null,likes:0,comments:[],likesBy:[],timestamp:timeResult,postBy:findUser?.displayName}]})
           setTextPostValue("")
     setIsLoading(false)
 
@@ -452,6 +452,7 @@ function Mid() {
         <FlipMove>
       {findUser?.posts?.map((item,index) => (
         <div key={index} className="singlePost">
+          <h5 className="postBy">{item?.postBy}</h5>
           <div className="post_top">
             <h2><a><img src={user?.photoURL === null ? avatar : user?.photoURL} alt="" /></a>{item.text}</h2>
           <h4>{item?.timestamp}</h4>
@@ -498,6 +499,8 @@ function Mid() {
 {filterFriends?.map((singleFriend) => (
             singleFriend?.posts?.map((item,index) => (
               <div key={index} className="singlePost">
+          <h5 className="postBy">{item?.postBy}</h5>
+
               <div className="post_top">
                 <h2><a><img src={singleFriend?.photoURL === null ? avatar : singleFriend?.photoURL} alt="" /></a>{item.text}</h2>
                 <h4>{item?.timestamp}</h4>
