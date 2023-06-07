@@ -19,7 +19,8 @@ function ContextFun({children}) {
     let [isLoading,setIsLoading] = useState(false)
     useEffect(() => {
       onAuthStateChanged(auth,(current) => setUser(current))
-      fetchingUsers()
+      setIsLoading(true)
+      fetchingUsers().then(() => setIsLoading(false))
     },[])
   // =================== Values ===============
   const values = {
